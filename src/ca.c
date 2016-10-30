@@ -11,6 +11,7 @@
 #include <stdbool.h>
 
 #include "params.h"
+#include "local_params.h"
 #include "ca.h"
 
 /*

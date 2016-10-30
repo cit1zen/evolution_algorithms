@@ -3,27 +3,20 @@
 comp=gcc -O3 -std=c99 -Wall -Wextra -pedantic -lm
 
 # Vytvori vsetky potrebne subory
-all: main
+all: evo
 
-# Mainfile
-main: ca.o ea.o main.o 
-	$(comp) main.o ca.o ea.o -lm -o $@
-main.o: main.c params.h
-	$(comp) -c main.c -o $@
+evo: ca.o ea.o evo.o 
+	$(comp) $@.o ca.o ea.o -lm -o evo
+evo.o: $(source_dir)main.c $(source_dir)params.h
+	$(comp) -c $(source_dir)main.c -o $@
 
+ea.o: $(source_dir)ea.c $(source_dir)ea.h $(source_dir)params.h
+	$(comp) -c $(source_dir)ea.c -o $@
 
-# Evolution algoriths and fitness functions
-ea.o: ea.c ea.h params.h
-	$(comp) -c ea.c -o $@
+ca.o: $(source_dir)ca.c $(source_dir)ca.h $(source_dir)params.h
+	$(comp) -c $(source_dir)ca.c -o $@
 
-# Cellular automaton
-ca.o: ca.c ca.h params.h
-	$(comp) -c ca.c -o $@
-
-PHONY: clean clean_o
+PHONY: clean
 
 clean:
-	rm *.o main
-
-clean_o:
-	rm *.o
+	rm *.o evo

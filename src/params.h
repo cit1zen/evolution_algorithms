@@ -119,14 +119,14 @@
 *  Population in next cycle is created by mutating best chromosome
 *  No elitism.
 */
-#define ES
+//#define ES
 
 // Evolution algorithm with turnament selection and elitism
-#define GA
+//#define GA
 
 
 // Evolution algorithm with turnament selection and without elitism
-#define GA_NO_ELIT
+//#define GA_NO_ELIT
 
 // TODO name for this algorithm
 #define MB

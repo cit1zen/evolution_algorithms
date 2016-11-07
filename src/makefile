@@ -3,11 +3,11 @@
 comp=gcc -O3 -std=c99 -Wall -Wextra -pedantic -lm
 
 # Vytvori vsetky potrebne subory
-all: evo
+all: evol
 
-evo: ca.o ea.o evo.o 
-	$(comp) $@.o ca.o ea.o -lm -o evo
-evo.o: $(source_dir)main.c $(source_dir)params.h
+evol: ca.o ea.o evol.o 
+	$(comp) $@.o ca.o ea.o -lm -o $@
+evol.o: $(source_dir)main.c $(source_dir)params.h
 	$(comp) -c $(source_dir)main.c -o $@
 
 ea.o: $(source_dir)ea.c $(source_dir)ea.h $(source_dir)params.h
@@ -19,4 +19,4 @@ ca.o: $(source_dir)ca.c $(source_dir)ca.h $(source_dir)params.h
 PHONY: clean
 
 clean:
-	rm *.o evo
+	rm *.o evol

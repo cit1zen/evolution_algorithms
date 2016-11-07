@@ -54,5 +54,9 @@ int main(int argc, char * argv[])
 			MB_search(argv[0], argv[1]);
 		#endif
 	}
+	else
+	{
+		perror("Bad arguments");
+	}
 	return 0;
 }

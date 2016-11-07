@@ -32,7 +32,7 @@
 // Number of all cycles
 #define CYCLES 20
 // Number of generations
-#define GENERATIONS 10000
+#define GENERATIONS 2000000
 // Number of mutations
 #define MAX_MUTATIONS 3
 #define MIN_MUTATIONS 1

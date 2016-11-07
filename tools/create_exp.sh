@@ -35,6 +35,9 @@ cp "tools/stop_exp.sh" $experiment_dir
 # Copy submit.sh
 cp "tools/submit.sh" $experiment_dir
 
+# Copy ###QSUB.SH
+cp "tools/###QSUB.SH" $experiment_dir
+
 # Copy target and origin pattern
 cp $target_pattern $experiment_dir"/target"
 cp $origin_pattern $experiment_dir"/origin"
@@ -60,7 +63,7 @@ do
     sub_dir=$experiment_dir"/src/"$(echo "$entry" | grep -oE -e "[^/]+" | grep -oE -e ".+\.h" | grep -oE -e "^[^.]+")"/"
 
     # Copy of experiment local_param.h
-    cp $entry $sub_dir"local_param.h"
+    cp $entry $sub_dir"local_params.h"
 done
 
 # Create symlink in experiments
@@ -86,6 +89,9 @@ cd $experiment_dir"/src/"
 
                 # Symlink submit.sh
                 ln -s "../../submit.sh"
+
+                # Symlink to ###QSUB.SH
+                ln -s "../../###QSUB.SH"
             cd ..
         fi
     done

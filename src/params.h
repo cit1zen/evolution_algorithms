@@ -24,7 +24,8 @@
 // Size of population, num of chromosomes
 #define POPULATION_SIZE 8
 // Maximal fitness
-#define MAX_FITNESS (pow(CA_SIZE,CA_DIMENSIONS))
+// Defined in local_params.h
+// #define MAX_FITNESS (pow(CA_SIZE,CA_DIMENSIONS))
 // Number of STATES_COUNT
 #define STATES_COUNT 2
 // Number of non evaluating cycles
@@ -53,7 +54,9 @@
 // Conditionally matching rules
 #define CMR
 // Size of CMR chromosome
-#define CMR_COUNT 20
+// Defined in local_params.h
+// #define CMR_COUNT 20
+
 /* CMR coding
 * 0  cell_state >= condition_state
 * 1  cell_state <= condition_state

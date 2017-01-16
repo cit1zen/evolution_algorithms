@@ -23,7 +23,7 @@ unsigned rand_init()
 	if (fp == NULL) fp = fopen("/dev/random","rb");
 	if (fp != NULL) {
 		//printf("Init from /dev/{u}random\n");
-		int dummy = fread(&seed, sizeof(seed), 1, fp);
+		fread(&seed, sizeof(seed), 1, fp);
 		fclose(fp);
 	} else {
 		seed = (unsigned int)((unsigned) time(NULL) + getpid());
@@ -71,7 +71,6 @@ int main(int argc, char * argv[])
 {
 	// RNG
 	unsigned int seed=rand_init();
-	srand(seed);
 
 	if( argc == 2 )
 	{
@@ -87,7 +86,7 @@ int main(int argc, char * argv[])
 		#ifdef MB
 			MB_search(argv[0], argv[1]);
 		#endif
-		print_params(seed)
+		print_params(seed);
 	}
 	else
 	{

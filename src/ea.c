@@ -166,9 +166,8 @@ void evol_frame(char * original_state_file, char * target_state_file, void (*nex
 			/* If solution was found, we print chromosome and aditional info */
 			if( current_pop[chromosome_index].fitness>=MAX_FITNESS )
 			{
-				printf("SOLUTION FOUND: GENERATION %u: ",generation);
+				printf("SUCCESS|GENERATION:%u|RULES:",generation);
 				print_chromosome( &current_pop[chromosome_index] );
-				printf("\n");
 				return;
 			}
 		}
@@ -182,7 +181,7 @@ void evol_frame(char * original_state_file, char * target_state_file, void (*nex
 		next_pop = dummy;
 
 	}
-	printf("NO SOLUTIONS FOUND\n");
+	printf("FAIL");
 	return;
 }
 

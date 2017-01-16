@@ -32,6 +32,40 @@ unsigned rand_init()
 	return seed;
 }
 
+// Prints parameters
+void print_params(unsigned seed)
+{
+	// Normal info
+	printf("|SEED:%u|STATES:%u|SIZE:%u|DIM:%u",seed,STATES_COUNT,CA_SIZE,CA_DIMENSIONS);
+	printf("|POP:%u|MAX_FIT:%u|CYCLES:%u",POPULATION_SIZE,MAX_FITNESS,CYCLES);
+	printf("|NO_CON_CYCLES:%u|FULL_GEN:%u",NON_EVAL_CYCLES,GENERATIONS);
+	// Hood
+	#ifdef VON_NEUMANN
+		printf("|HOOD:VON_NEUMANN");
+	#endif
+	#ifdef MOORE
+		printf("|HOOD:MOORE");
+	#endif
+	// Fitness function
+	#ifdef PATTERN_FITNESS
+		printf("|FITNESS:PATTERN_FITNESS");
+	#endif
+	// Evo. algorithm
+	#ifdef ES
+		printf("|EVO_ALGO:ES");
+	#endif
+	#ifdef GA
+		printf("|EVO_ALGO:GA");
+	#endif
+	#ifdef GA_NO_ELIT
+		printf("|EVO_ALGO:GA_NO_ELIT");
+	#endif
+	#ifdef MB
+		printf("|EVO_ALGO:MB");
+	#endif	
+	printf("\n");
+}
+
 // TODO add some arguments maybe
 int main(int argc, char * argv[])
 {
@@ -53,6 +87,7 @@ int main(int argc, char * argv[])
 		#ifdef MB
 			MB_search(argv[0], argv[1]);
 		#endif
+		print_params(seed)
 	}
 	else
 	{

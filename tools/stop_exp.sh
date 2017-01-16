@@ -1,12 +1,12 @@
 #!/bin/sh
 
-cd src
-	for experiment in *; do
-		if [ -d $experiment ]; then
+for experiment in *; do
+	if [ -d $experiment ]; then
+		if [ "$experiment" != "src" ]; then
 			echo "Terminating" $experiment
 			cd $experiment
-			./#QDEL.SH
+				./#QDEL.SH
 			cd ..
 		fi
-	done
-cd ..
+	fi
+done

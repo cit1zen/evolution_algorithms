@@ -10,4 +10,4 @@ module load OpenMPI
 cd $PBS_O_WORKDIR
 
 #mpiexec -bycore -bind-to-core ./test
-mpiexec ./evol origin target
+mpiexec ./evol ../origin ../target

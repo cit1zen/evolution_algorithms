@@ -83,6 +83,9 @@ def main():
         os.mkdir(pat_dir)
         # Copies source files and etc inside dir
         copy_files(pat_dir)
+        # Copies patterns inside
+        shutil.copy(pat[0], pat_dir + "origin")
+        shutil.copy(pat[1], pat_dir + "target")
 
         # Creation of experiment
         # difference is only in local_params.h

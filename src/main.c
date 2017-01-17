@@ -71,20 +71,21 @@ int main(int argc, char * argv[])
 {
 	// RNG
 	unsigned int seed=rand_init();
+	srand(106294560);
 
-	if( argc == 2 )
+	if( argc == 3 )
 	{
 		#ifdef ES
-			ES_search(argv[0], argv[1]);
+			ES_search(argv[1], argv[2]);
 		#endif
 		#ifdef GA
-			GA_ELIT_search(argv[0], argv[1]);
+			GA_ELIT_search(argv[1], argv[2]);
 		#endif
 		#ifdef GA_NO_ELIT
-			GA_NO_ELIT_search(argv[0], argv[1]);
+			GA_NO_ELIT_search(argv[1], argv[2]);
 		#endif
 		#ifdef MB
-			MB_search(argv[0], argv[1]);
+			MB_search(argv[1], argv[2]);
 		#endif
 		print_params(seed);
 	}

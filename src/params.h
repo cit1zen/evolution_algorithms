@@ -27,7 +27,7 @@
 // Defined in local_params.h
 // #define MAX_FITNESS (pow(CA_SIZE,CA_DIMENSIONS))
 // Number of STATES_COUNT
-#define STATES_COUNT 2
+#define STATES_COUNT 5
 // Number of non evaluating cycles
 #define NON_EVAL_CYCLES 4
 // Number of all cycles

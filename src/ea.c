@@ -34,7 +34,8 @@ void mutate_chromosome( struct chromosome * chromosome, unsigned num_mut )
 			chromosome->dna[(mutated_cmr*CMR_SIZE)+mutated_position]=rand()%4;
 	}
 
-	if( num_mut == 0 )
+	// If chromosome was mutated, we set fitness to 0
+	if( num_mut != 0 )
 		chromosome->fitness=0;
 }
 
@@ -75,8 +76,14 @@ void copy_chromosome( struct chromosome * origin, struct chromosome *target)
 // Printing chromosome
 void print_chromosome( struct chromosome * chromosome )
 {
-	for(unsigned i=0;i<CMR_SIZE*CMR_COUNT;i++)
-		printf("%u", chromosome->dna[i] );
+	for(unsigned cmr=0; cmr<CMR_COUNT;cmr++)
+	{
+		for(unsigned i=0;i<CMR_SIZE;i++)
+		{
+			printf("%u", chromosome->dna[cmr+i] );
+		}
+		printf(" ");
+	}
 }
 
 // Turnament selection
@@ -133,6 +140,9 @@ void evol_frame(char * original_state_file, char * target_state_file, void (*nex
 	/* Initialize CA with wanted pattern */
 	init_and_load_CA(target_pattern, target_state_file)
 
+	// Size of automaton
+	const unsigned size_of_automaton = (int) pow(CA_SIZE,CA_DIMENSIONS);
+
 	/* Evolution */
 	for(unsigned generation=0; generation<GENERATIONS ;generation++)
 	{
@@ -141,11 +151,11 @@ void evol_frame(char * original_state_file, char * target_state_file, void (*nex
 		{
 			/* In case of elitism */
 			/* So already evaluated chromosomes are not evaluated again */ 
-			if(current_pop[chromosome_index].fitness==0)
+			if(current_pop[chromosome_index].fitness!=0)
 				continue;
 
 			/* New CA used for evaluation of this chromosome */
-			unsigned cellular_automaton[ (int) pow(CA_SIZE,CA_DIMENSIONS) ];
+			unsigned cellular_automaton[ size_of_automaton ];
 			copy_ca( origin_pattern,cellular_automaton);
 
 			/* Do non evaluation runs */
@@ -157,10 +167,7 @@ void evol_frame(char * original_state_file, char * target_state_file, void (*nex
 			{
 				do_cycles( cellular_automaton, 1, current_pop[ chromosome_index ].dna);
 
-				unsigned fitness = fitness_function(cellular_automaton,target_pattern);
-
-				if ( fitness > current_pop[chromosome_index].fitness )
-					current_pop[chromosome_index].fitness=fitness;
+				current_pop[chromosome_index].fitness = fitness_function(cellular_automaton,target_pattern);
 			}
 
 			/* If solution was found, we print chromosome and aditional info */

@@ -101,14 +101,10 @@ inline unsigned turnament( struct chromosome * chromosomes )
 	return best_index;
 }
 
-
-// TODO
+// Compares fitness of two chromosomes
 int compar(const void * chromosome_1, const void * chromosome_2)
 {
-	if ( ((struct chromosome *)chromosome_2)->fitness > ((struct chromosome *)chromosome_1)->fitness )
-		return 0;
-	else
-		return 1;
+	return ( ((struct chromosome *)chromosome_2)->fitness - ((struct chromosome *)chromosome_1)->fitness );
 }
 
 // Creates CA and loads state of CA from file
@@ -201,9 +197,15 @@ void ES_next_gen(struct chromosome * current_pop, struct chromosome * next_pop )
 	unsigned best_chromosome_index=0;
 	for(unsigned chromosome_index=0;chromosome_index<POPULATION_SIZE;chromosome_index++)
 	{
+		#ifdef DEBUG
+		printf("%i ", current_pop[chromosome_index].fitness);
+		#endif
 		if(current_pop[best_chromosome_index].fitness<current_pop[chromosome_index].fitness)
 			best_chromosome_index=chromosome_index;
 	}
+	#ifdef DEBUG
+	printf("\n");
+	#endif
 
 	// Use best chromosome as parrent for next generation
 	for(unsigned chromosome_index=0;chromosome_index<POPULATION_SIZE;chromosome_index++)
@@ -225,6 +227,14 @@ void GA_ELIT_next_gen(struct chromosome * current_pop, struct chromosome * next_
 {
 	// Choose new parent in turnament
 	unsigned parent_chromosome_index = turnament(current_pop);
+
+	#ifdef DEBUG
+	for(unsigned chromosome_index=0;chromosome_index<POPULATION_SIZE;chromosome_index++)
+	{
+		printf("%i ", current_pop[chromosome_index].fitness);
+	}
+	printf("\n");
+	#endif
 
 	// Elitism
 	copy_chromosome( &current_pop[parent_chromosome_index] , &next_pop[0]);
@@ -248,7 +258,15 @@ void GA_ELIT_search(char * original_state_file, char * target_state_file )
 void GA_NO_ELIT_next_gen(struct chromosome * current_pop, struct chromosome * next_pop )
 {
 	// Choose new parent in turnament
-	unsigned parent_chromosome_index= turnament( current_pop );
+	unsigned parent_chromosome_index = turnament( current_pop );
+
+	#ifdef DEBUG
+	for(unsigned chromosome_index=0;chromosome_index<POPULATION_SIZE;chromosome_index++)
+	{
+		printf("%i ", current_pop[chromosome_index].fitness);
+	}
+	printf("\n");
+	#endif
 
 	// Create new pop
 	for(unsigned chromosome_index=0;chromosome_index<POPULATION_SIZE;chromosome_index++)
@@ -269,18 +287,25 @@ void GA_NO_ELIT_search(char * original_state_file, char * target_state_file )
 void MB_next_gen(struct chromosome * current_pop, struct chromosome * next_pop )
 {
 	// Sorting according to fitness
-	// TODO if working properly
 	qsort(current_pop, POPULATION_SIZE, sizeof(struct chromosome), compar);
 
 	// Selecting parent
 	unsigned last_best = 0;
 	for(unsigned chromosome_index=0;chromosome_index<POPULATION_SIZE;chromosome_index++)
 	{
-		if (current_pop[chromosome_index].fitness==current_pop[last_best].fitness)
+		if (current_pop[chromosome_index].fitness==current_pop[0].fitness)
+		{
+			#ifdef DEBUG
+				printf("%i ", current_pop[chromosome_index].fitness);
+			#endif
 			last_best++;
+		}
 		else
 			break;
 	}
+	#ifdef DEBUG
+	printf("\n");
+	#endif
 	unsigned parent_chromosome_index = rand()%last_best;
 
 	// Create new pop

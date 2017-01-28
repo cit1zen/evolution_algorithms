@@ -76,7 +76,7 @@ void copy_chromosome( struct chromosome * origin, struct chromosome *target)
 // Printing chromosome
 void print_chromosome( struct chromosome * chromosome )
 {
-	for(unsigned cmr=0; cmr<CMR_COUNT;cmr++)
+	for(unsigned cmr=0; cmr<CMR_COUNT;cmr+=CMR_SIZE)
 	{
 		for(unsigned i=0;i<CMR_SIZE;i++)
 		{

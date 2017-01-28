@@ -3,12 +3,14 @@
 * Description: TODO
 */
 
+// Debug mode
+#define DEBUG
+
 /*
 * ==================================================================
 * CA settings
 * ==================================================================
 */
-
 
 // Size of cellular automaton
 #define CA_SIZE 12
@@ -23,9 +25,6 @@
 
 // Size of population, num of chromosomes
 #define POPULATION_SIZE 8
-// Maximal fitness
-// Defined in local_params.h
-// #define MAX_FITNESS (pow(CA_SIZE,CA_DIMENSIONS))
 // Number of STATES_COUNT
 #define STATES_COUNT 5
 // Number of non evaluating cycles
@@ -42,7 +41,7 @@
  * GA
  * GA_NO_ELIT
 */
-#define TURNAMENT_ROUNDS 4
+#define TURNAMENT_ROUNDS 3
 
 
 /*
@@ -108,8 +107,17 @@
 
 
 // Fitness functions
-#define PATTERN_FITNESS
+//#define PATTERN_FITNESS
+// Maximal fitness
+// Defined in local_params.h
+// #define MAX_FITNESS (pow(CA_SIZE,CA_DIMENSIONS))
+//#define MAX_FITNESS 144
 
+// Fitness function for stable patterns or 
+#define PATTERN_STABLE
+#define TEST_FRAME 2
+// #define MAX_FITNESS (2*pow(CA_SIZE,CA_DIMENSIONS))
+#define MAX_FITNESS 288
 
 /*
 * ==================================================================
@@ -125,7 +133,7 @@
 //#define ES
 
 // Evolution algorithm with turnament selection and elitism
-//#define GA
+// #define GA
 
 
 // Evolution algorithm with turnament selection and without elitism

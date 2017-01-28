@@ -34,6 +34,7 @@ void MB_search(char *,char *);
 * Fitness fuction
 * return fitness
 */
-unsigned fitness_function(unsigned *,unsigned *);
+unsigned patt_fitness(unsigned *,unsigned *);
+unsigned patt_stable(unsigned *, unsigned *, unsigned *, unsigned);
 
 #endif

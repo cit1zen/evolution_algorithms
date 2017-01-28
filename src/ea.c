@@ -157,21 +157,40 @@ void evol_frame(char * original_state_file, char * target_state_file, void (*nex
 			/* Do non evaluation runs */
 			do_cycles( cellular_automaton, NON_EVAL_CYCLES , current_pop[ chromosome_index ].dna );
 
+			#ifdef PATTERN_STABLE
+			unsigned history[CYCLES] = {0};
+			#endif
+
 			/* Evaluation runs */
 			/* Testing agains fitness function */
+			unsigned fitness = 0;
 			for(unsigned cycle=NON_EVAL_CYCLES;cycle<CYCLES;cycle++ )
 			{
 				do_cycles( cellular_automaton, 1, current_pop[ chromosome_index ].dna);
 
-				current_pop[chromosome_index].fitness = fitness_function(cellular_automaton,target_pattern);
-			}
+				#ifdef PATTERN_FITNESS
+				fitness = patt_fitness(cellular_automaton,target_pattern);
+				if(fitness > current_pop[chromosome_index].fitness)
+				{
+					current_pop[chromosome_index].fitness = fitness;
+				}
+				#endif
 
-			/* If solution was found, we print chromosome and aditional info */
-			if( current_pop[chromosome_index].fitness>=MAX_FITNESS )
-			{
-				printf("SUCCESS|GENERATION:%u|RULES:",generation);
-				print_chromosome( &current_pop[chromosome_index] );
-				return;
+				#ifdef PATTERN_STABLE
+				fitness = patt_stable(cellular_automaton,target_pattern,history,cycle);
+				if(fitness > current_pop[chromosome_index].fitness)
+				{
+					current_pop[chromosome_index].fitness = fitness;
+				}
+				#endif
+
+				/* If solution was found, we print chromosome and aditional info */
+				if( current_pop[chromosome_index].fitness>=MAX_FITNESS )
+				{
+					printf("SUCCESS|GENERATION:%u|LEN:%u|RULES:",generation,cycle);
+					print_chromosome( &current_pop[chromosome_index] );
+					return;
+				}
 			}
 		}
 
@@ -322,13 +341,12 @@ void MB_search(char * original_state_file, char * target_state_file )
 }
 
 
-/* PATTERN_FITNESS fitness function */
+/* Fitness functions */
 
-#ifdef PATTERN_FITNESS
 /*
 * Matches current state of CA to pattern and return number of matching cells	
 */
-unsigned fitness_function(unsigned * cellular_automaton, unsigned * pattern)
+unsigned patt_fitness(unsigned * cellular_automaton, unsigned * pattern)
 {
 	unsigned match=0;
 	for(int i=0;i< pow(CA_SIZE,CA_DIMENSIONS) ;i++)
@@ -339,4 +357,42 @@ unsigned fitness_function(unsigned * cellular_automaton, unsigned * pattern)
 	return match;
 }
 
-#endif
+/*
+* Matches best two fitness scores, so only stable rules can get 100 fitness
+* Or if we want to find oscilators
+*/
+unsigned patt_stable(unsigned * cellular_automaton, unsigned * pattern, unsigned * history, unsigned cycle)
+{
+	unsigned match=0;
+	for(int i=0;i < pow(CA_SIZE,CA_DIMENSIONS) ;i++)
+	{
+		if(cellular_automaton[i]==pattern[i])
+			match++;
+	}
+	history[cycle] = match;
+	unsigned second = 0;
+	unsigned first = 0;
+	if (cycle >= TEST_FRAME)
+	{
+		if (history[cycle] < history[cycle-1])
+		{
+			second = history[cycle];
+			first = history[cycle-1];
+		}
+		else
+		{
+			second = history[cycle-1];
+			first = history[cycle];
+		}
+
+		for (unsigned off = 2; off < TEST_FRAME; off++) 
+		{
+			if(first <= history[cycle-off])
+			{
+				second = first;
+				first = history[cycle-off];
+			}
+		}
+	}
+	return first + second;
+}

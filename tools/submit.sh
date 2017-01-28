@@ -1,5 +1,5 @@
 #!/bin/bash
-#PBS -q qfree
+#PBS -q qexp
 #PBS -N CAE
 #PBS -l select=1:ncpus=16:mpiprocs=16,walltime=1:00:00
 #PBS -J 1-6

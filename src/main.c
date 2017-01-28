@@ -71,7 +71,6 @@ int main(int argc, char * argv[])
 {
 	// RNG
 	unsigned int seed=rand_init();
-	srand(106294560);
 
 	if( argc == 3 )
 	{

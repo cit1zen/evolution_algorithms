@@ -30,7 +30,7 @@
 // Number of non evaluating cycles
 #define NON_EVAL_CYCLES 4
 // Number of all cycles
-#define CYCLES 20
+#define CYCLES 10
 // Number of generations
 #define GENERATIONS 2000000
 // Number of mutations
@@ -107,11 +107,11 @@
 
 
 // Fitness functions
-//#define PATTERN_FITNESS
+// #define PATTERN_FITNESS
 // Maximal fitness
 // Defined in local_params.h
 // #define MAX_FITNESS (pow(CA_SIZE,CA_DIMENSIONS))
-//#define MAX_FITNESS 144
+// #define MAX_FITNESS 144
 
 // Fitness function for stable patterns or 
 #define PATTERN_STABLE

@@ -13,7 +13,11 @@
 * unsigned ... coordinates of cell
 * x axis, y axis, z axis, ...
 */
+#if CA_DIMENSIONS == 2
+unsigned get_cell( unsigned * CA, unsigned width, unsigned height);
+#else
 unsigned get_cell( unsigned * CA, ... );
+#endif
 
 /*
 * Sets cell state
@@ -21,14 +25,17 @@ unsigned get_cell( unsigned * CA, ... );
 * unsigned ... coordinates of cell
 * x axis, y axis, z axis, ...
 */
+#if CA_DIMENSIONS == 2
+void set_cell( unsigned * CA, unsigned new_state, unsigned width, unsigned height);
+#else
 void set_cell( unsigned * CA, unsigned new_state, ... );
-
+#endif
 /*
 * Do num_cycles without evaluating fitness
 * unsigned num_cycles: number of cycles
 * pointer to CA structure
 */
-unsigned do_cycles( unsigned * CA, unsigned num_cycles , unsigned * rules);
+unsigned do_cycles( unsigned * current, unsigned * next, unsigned num_cycles , unsigned * rules);
 
 /*
 * Prints CA
@@ -57,6 +64,9 @@ void copy_ca( unsigned * origin, unsigned * target);
 * Structure XAXAXAXAX where X is state and A is cmr condition
 */
 #define RESOLVE(condition_code,condition_state,cell_state)						\
-	( (condition_code == 0) ? (cell_state >= condition_state ? true : false ) : ( condition_code == 1 ? (cell_state <= condition_state ? true : false ) : ( condition_code == 2 ? (cell_state == condition_state ? true : false ) : ( condition_code == 3 ? (cell_state != condition_state ? true : false ) : false ) ) ) )
+	( (condition_code == 0) ? (cell_state >= condition_state ? true : false ) : \
+	( (condition_code == 1) ? (cell_state <= condition_state ? true : false ) : \
+	( (condition_code == 2) ? (cell_state == condition_state ? true : false ) : \
+	( (condition_code == 3) ? (cell_state != condition_state ? true : false ) : false ) ) ) )
 
 #endif

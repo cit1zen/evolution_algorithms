@@ -76,11 +76,11 @@ void copy_chromosome( struct chromosome * origin, struct chromosome *target)
 // Printing chromosome
 void print_chromosome( struct chromosome * chromosome )
 {
-	for(unsigned cmr=0; cmr<CMR_COUNT;cmr+=CMR_SIZE)
+	for(unsigned cmr=0; cmr<CMR_COUNT;cmr++)
 	{
 		for(unsigned i=0;i<CMR_SIZE;i++)
 		{
-			printf("%u", chromosome->dna[cmr+i] );
+			printf("%u", chromosome->dna[(cmr*CMR_SIZE)+i]);
 		}
 		printf(" ");
 	}
@@ -151,11 +151,17 @@ void evol_frame(char * original_state_file, char * target_state_file, void (*nex
 				continue;
 
 			/* New CA used for evaluation of this chromosome */
-			unsigned cellular_automaton[ size_of_automaton ];
-			copy_ca( origin_pattern,cellular_automaton);
+			unsigned cellular_automaton_1[ size_of_automaton ];
+			unsigned cellular_automaton_2[ size_of_automaton ];
+
+			unsigned * current = cellular_automaton_1;
+			unsigned * next = cellular_automaton_2;
+
+			copy_ca(origin_pattern, current);
+			copy_ca(origin_pattern, next);
 
 			/* Do non evaluation runs */
-			do_cycles( cellular_automaton, NON_EVAL_CYCLES , current_pop[ chromosome_index ].dna );
+			do_cycles(current, next, NON_EVAL_CYCLES , current_pop[ chromosome_index ].dna);
 
 			#ifdef PATTERN_STABLE
 			unsigned history[CYCLES] = {0};
@@ -166,10 +172,10 @@ void evol_frame(char * original_state_file, char * target_state_file, void (*nex
 			unsigned fitness = 0;
 			for(unsigned cycle=NON_EVAL_CYCLES;cycle<CYCLES;cycle++ )
 			{
-				do_cycles( cellular_automaton, 1, current_pop[ chromosome_index ].dna);
+				do_cycles( current, next, 1, current_pop[ chromosome_index ].dna);
 
 				#ifdef PATTERN_FITNESS
-				fitness = patt_fitness(cellular_automaton,target_pattern);
+				fitness = patt_fitness(next, target_pattern);
 				if(fitness > current_pop[chromosome_index].fitness)
 				{
 					current_pop[chromosome_index].fitness = fitness;
@@ -177,7 +183,7 @@ void evol_frame(char * original_state_file, char * target_state_file, void (*nex
 				#endif
 
 				#ifdef PATTERN_STABLE
-				fitness = patt_stable(cellular_automaton,target_pattern,history,cycle);
+				fitness = patt_stable(next, target_pattern, history, cycle);
 				if(fitness > current_pop[chromosome_index].fitness)
 				{
 					current_pop[chromosome_index].fitness = fitness;
@@ -189,8 +195,29 @@ void evol_frame(char * original_state_file, char * target_state_file, void (*nex
 				{
 					printf("SUCCESS|GENERATION:%u|LEN:%u|RULES:",generation,cycle);
 					print_chromosome( &current_pop[chromosome_index] );
+					
+					/*
+					copy_ca( origin_pattern, current);
+					print_ca( current);
+					for(unsigned i=0; i<=cycle;i++)
+					{		
+						printf("\n");
+						do_cycles( current, next, 1, current_pop[ chromosome_index ].dna);
+						print_ca( next);
+						
+						unsigned * temp = current;
+						current = next;
+						next = temp;
+					}
+					*/
+					
 					return;
 				}
+
+				/* Switch of lattices */
+				unsigned * temp = current;
+				current = next;
+				next = temp;
 			}
 		}
 

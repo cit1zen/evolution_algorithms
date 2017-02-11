@@ -123,6 +123,7 @@ unsigned do_cycles( unsigned * current, unsigned * next, unsigned num_cycles , u
 
 							// Position in cmr rules
 							// cmr_index points at start of cmr rule
+							unsigned changed = 0;
 							for( int cmr_index = 0 ; cmr_index < (CMR_COUNT*CMR_SIZE); cmr_index+=CMR_SIZE )
 							{
 								// Decision block, every if must be true
@@ -142,10 +143,14 @@ unsigned do_cycles( unsigned * current, unsigned * next, unsigned num_cycles , u
 								if(RESOLVE(rules[cmr_index+9],rules[cmr_index+8],get_cell( current, width, height+1 )))
 								// If everything fits => new state
 								{
-									set_cell( next, rules[cmr_index+10] , width, height );
-									break;									
+									set_cell(next, rules[cmr_index+10], width, height);
+									changed = 1;
+									break;								
 								}}}}}
-
+							}
+							if(!changed)
+							{
+								set_cell(next, get_cell( current, width, height ), width, height);
 							}
 
 						// Square
@@ -153,6 +158,7 @@ unsigned do_cycles( unsigned * current, unsigned * next, unsigned num_cycles , u
 
 							// Position in cmr rules
 							// cmr_index points at start of cmr rule
+							unsigned changed = 0;
 							for( int cmr_index = 0 ; cmr_index < (CMR_COUNT*CMR_SIZE); cmr_index+=CMR_SIZE )
 							{
 								// Decision block, every if must be true
@@ -177,8 +183,13 @@ unsigned do_cycles( unsigned * current, unsigned * next, unsigned num_cycles , u
 								if(RESOLVE(rules[cmr_index+17],rules[cmr_index+16],get_cell( current, width+1, height+1 )))
 								{
 									set_cell( next, rules[cmr_index+18] , width, height );
+									changed = 1;
 									break;	
 								}				
+							}
+							if(!changed)
+							{
+								set_cell(next, get_cell( current, width, height ), width, height);
 							}
 
 						#endif

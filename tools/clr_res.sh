@@ -1,15 +1,18 @@
 #!/bin/sh
 
+rm -r _results
+
 cd experiments
 
 for experiment in *; do
 	if [ -d $experiment ]; then
 		cd $experiment
-		echo "Terminating" $experiment
+		echo "Clearing" $experiment
 		for set in *; do
 			if [ -d $set ]; then
+				echo "  "$set
 				cd $set
-					./#QDEL.SH
+					rm *.o *.e
 				cd ..
 			fi
 		done

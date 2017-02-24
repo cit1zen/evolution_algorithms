@@ -1,12 +1,20 @@
 #!/bin/sh
 
+cd experiments
+
 for experiment in *; do
 	if [ -d $experiment ]; then
-		if [ "$experiment" != "src" ]; then
-			echo "Making" $experiment
-			cd $experiment
-				make
-			cd ..
-		fi
+		cd $experiment
+		echo "Making" $experiment
+		for set in *; do
+			if [ -d $set ]; then
+				cd $set
+					make
+				cd ..
+			fi
+		done
+		cd ..
 	fi
 done
+
+cd ..

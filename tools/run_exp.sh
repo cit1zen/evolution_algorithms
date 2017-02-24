@@ -2,11 +2,16 @@
 
 for experiment in *; do
 	if [ -d $experiment ]; then
-		if [ "$experiment" != "src" ]; then
-			echo "Running" $experiment
-			cd $experiment
-				./###QSUB.SH
-			cd ..
-		fi
+		cd $experiment
+		echo "Running" $experiment
+		for set in *; do
+			if [ -d $set ]; then
+				echo "  "$set
+				cd $set
+					./###QSUB.SH
+				cd ..
+			fi
+		done
+		cd ..
 	fi
 done

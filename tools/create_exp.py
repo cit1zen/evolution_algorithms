@@ -14,7 +14,7 @@ logging.basicConfig()
 # Source files
 src = ["ea.c", "ea.h", "main.c", "ca.c", "ca.h", "params.h", "makefile"]
 # Scripts inside experiment variotion dir
-support = ["###QSUB.SH", "submit.sh", "get_res.py"]
+support = ["###QSUB.SH", "submit.sh"]
 # Scripts, that do not need to be inside exp. var.
 tools = ["run_exp.sh", "make_exp.sh", "stop_exp.sh", "get_res.sh"]
 
@@ -27,15 +27,11 @@ def copy_files(directory, tool_dir="tools/", sup_dir="tools/", src_dir="src/"):
     """
     # TODO change paths, so they are set by arg
     # Tools
-    for f in [tool_dir + x for x in tools]:
-        shutil.copy(f, directory)
+    # for f in [tool_dir + x for x in tools]:
+    #     shutil.copy(f, directory)
     # Support scripts
     for f in [sup_dir + x for x in support]:
         shutil.copy(f, directory)
-    # Source files
-    os.mkdir(directory + "src/")
-    for f in [src_dir + x for x in src]:
-        shutil.copy(f, directory + "src/")
 
 def create_symlinks(directory):
     """
@@ -50,7 +46,7 @@ def create_symlinks(directory):
     for exp in experiments:
         # Symlinks to source files
         for f in src:
-            os.symlink("../src/" + f, exp + f)
+            os.symlink("../../../src/" + f, exp + f)
         # Symlink to support scripts
         for f in support:
             os.symlink("../" + f, exp + f)

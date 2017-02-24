@@ -1,12 +1,18 @@
 #!/bin/sh
 
-mkdir -p _results
+mkdir -p ../_results
 
-for hdir in *; do
-    if [ -d $hdir ] && [[ $hdir != "src" ]]
-    then
-        cd $hdir
-        ../get_res.py $hdir/* --output ../_results/ --origin origin --target target
-        cd ..
-    fi
+for experiment in *; do
+	if [ -d $experiment ]; then
+		cd $experiment
+		echo "Processing" $experiment
+		for set in *; do
+			if [ -d $set ]; then
+				cd $set
+					../../../tools/get_res.py * --output ../../../_results/ --origin origin --target target
+				cd ..
+			fi
+		done
+		cd ..
+	fi
 done

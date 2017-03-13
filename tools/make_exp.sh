@@ -7,7 +7,7 @@ for experiment in *; do
 		cd $experiment
 		echo "Making" $experiment
 		for set in *; do
-			if [ -d $set ]; then
+			if [ -d $set ] && [ $set != 'src' ]; then
 				cd $set
 					make
 				cd ..
@@ -16,5 +16,4 @@ for experiment in *; do
 		cd ..
 	fi
 done
-
 cd ..

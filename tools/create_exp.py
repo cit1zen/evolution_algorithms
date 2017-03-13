@@ -28,18 +28,21 @@ def copy_files(directory, tool_dir="tools/", sup_dir="tools/", src_dir="src/"):
     Args:
         directory - Main directory path.
     """
-    # TODO change paths, so they are set by arg
-    # Tools
-    # for f in [tool_dir + x for x in tools]:
-    #     shutil.copy(f, directory)
+    # Support scripts
+    for f in [tool_dir + x for x in tools]:
+        shutil.copy(f, directory)
     # Support scripts
     for f in [sup_dir + x for x in support]:
         shutil.copy(f, directory)
+    # Source files
+    os.mkdir(directory + "src/")
+    for f in [src_dir + x for x in src]:
+        shutil.copy(f, directory + "src/")
 
 
 def create_symlinks(dir):
     """
-    Creates necessary symlinks in experiment directory.
+    Creates necessary symlinks in experiment directory."
 
     Args:
         dir - Target direcory.

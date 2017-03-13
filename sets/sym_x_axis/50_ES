@@ -5,7 +5,7 @@
 
 #define CMR_COUNT 50
 
-#define GA
+#undef GA
 #undef MB
 #undef GA_NO_ELIT
-#undef ES
+#define ES

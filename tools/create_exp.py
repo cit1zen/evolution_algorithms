@@ -1,11 +1,14 @@
 #!/usr/bin/env python3
 # Creates experiment with evo. algorithm
 
+import re
 import os
 import shutil
 import logging
 import argparse
+import configparser
 import itertools
+
 
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)
@@ -14,7 +17,11 @@ logging.basicConfig()
 # Source files
 src = ["ea.c", "ea.h", "main.c", "ca.c", "ca.h", "params.h", "makefile"]
 # Scripts inside experiment variotion dir
+<<<<<<< HEAD
 support = ["###QSUB.SH", "submit.sh"]
+=======
+support = ["###QSUB.SH", "get_res.py"]
+>>>>>>> WIP: Rework creating of experiment using config
 # Scripts, that do not need to be inside exp. var.
 tools = ["run_exp.sh", "make_exp.sh", "stop_exp.sh", "get_res.sh"]
 
@@ -22,8 +29,8 @@ def copy_files(directory, tool_dir="tools/", sup_dir="tools/", src_dir="src/"):
     """
     Copies tools, source code and support files into exp. directory.
 
-    :param directory: Main directory path.
-    :type directory: str
+    Args:
+        directory - Main directory path.
     """
     # TODO change paths, so they are set by arg
     # Tools
@@ -35,10 +42,10 @@ def copy_files(directory, tool_dir="tools/", sup_dir="tools/", src_dir="src/"):
 
 def create_symlinks(directory):
     """
-    Creates necessary symlink inside experiment directiries
+    Creates necessary symlinks inside experiment directories
 
-    :param directory: Main directory path.
-    :type directory: str
+    Args:
+        directory - Main directory path.
     """
     # Experiment variants
     experiments = [directory + d + "/" for d in os.listdir(directory)
@@ -51,26 +58,53 @@ def create_symlinks(directory):
         for f in support:
             os.symlink("../" + f, exp + f)
 
+def create_submit(config, target):
+    """
+    Create submit file using config.
+
+    Args:
+        config - Path to configuration file.
+        target - Target directory.
+    """
+    ncpus = config['submit']['npcus']
+    mpiprocs = config['submit']['mpiprocs']
+    walltime = config['submit']['walltime']
+    processors = config['submit']['processors']
+    project = config['submit']['project']
+    queue = config['submit']['queue']
+    submit = ("""#!/bin/bash
+              #PBS -q {}
+              #PBS -N CAE
+              #PBS -l select=1:ncpus={}:mpiprocs={},walltime={}
+              #PBS -J 1-{}
+              #PBS -A {}
+
+              module load OpenMPI
+
+              cd $PBS_O_WORKDIR
+
+              mpiexec ./evol ../origin ../target
+              """)
+              .format(queue, ncpus, mpiprocs, walltime, processors, project)
+    with open(target + 'submit.sh', 'w') as f:
+        f.write(submit)
+
 def main():
     parser = argparse.ArgumentParser(description='Create experiment for ANSELM.')
-    parser.add_argument('--start', metavar='N', nargs="+",
-                        help='start patterns', required=True)
-    parser.add_argument('--target', metavar='N', nargs="+",
-                        help='target patterns', required=True)
-    parser.add_argument('--params', metavar='N', nargs="+",
-                        help='local params of evolution', required=True)
+    parser.add_argument('-c', '--config', required=True,
+                        help='configuration of experiments')    
     parser.add_argument('-o', '--output', default="./experiments",
                         help='output dir for experiments')
     args = parser.parse_args()
 
-    # We create couples consisting of start and target pattern
-    patterns = itertools.product(args.start, args.target)
+    config = configparser.ConfigParser()
+    config.read(args.config)
+
     # Create dirs, where experiment will be stored
     # Every couple have its own dir
-    for pat in patterns:
+    for pat in re.match("exp_.+", config.sections()):
         # Path to pattern dir
-        pat_dir = "{}/{}-{}/".format(args.output, pat[0].split("/")[-1],
-                                     pat[1].split("/")[-1])
+        pat_dir = "{}/{}/".format(args.output, pat[pat.find('_') + 1:])
         # Check if already exist, if exist remove
         logger.info("Create experiment in {}".format(pat_dir))
         if os.path.exists(pat_dir):
@@ -80,8 +114,8 @@ def main():
         # Copies source files and etc inside dir
         copy_files(pat_dir)
         # Copies patterns inside
-        shutil.copy(pat[0], pat_dir + "origin")
-        shutil.copy(pat[1], pat_dir + "target")
+        shutil.copy(config[pat]['origin'], pat_dir + "origin")
+        shutil.copy(config[pat]['target'], pat_dir + "target")
 
         # Creation of experiment
         # difference is only in local_params.h

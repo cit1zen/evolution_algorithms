@@ -7,7 +7,6 @@ import shutil
 import logging
 import argparse
 import configparser
-import itertools
 
 
 logger = logging.getLogger(__name__)
@@ -17,13 +16,10 @@ logging.basicConfig()
 # Source files
 src = ["ea.c", "ea.h", "main.c", "ca.c", "ca.h", "params.h", "makefile"]
 # Scripts inside experiment variotion dir
-<<<<<<< HEAD
-support = ["###QSUB.SH", "submit.sh"]
-=======
 support = ["###QSUB.SH", "get_res.py"]
->>>>>>> WIP: Rework creating of experiment using config
 # Scripts, that do not need to be inside exp. var.
 tools = ["run_exp.sh", "make_exp.sh", "stop_exp.sh", "get_res.sh"]
+
 
 def copy_files(directory, tool_dir="tools/", sup_dir="tools/", src_dir="src/"):
     """
@@ -40,31 +36,30 @@ def copy_files(directory, tool_dir="tools/", sup_dir="tools/", src_dir="src/"):
     for f in [sup_dir + x for x in support]:
         shutil.copy(f, directory)
 
-def create_symlinks(directory):
+
+def create_symlinks(dir):
     """
-    Creates necessary symlinks inside experiment directories
+    Creates necessary symlinks in experiment directory.
 
     Args:
-        directory - Main directory path.
+        dir - Target direcory.
     """
-    # Experiment variants
-    experiments = [directory + d + "/" for d in os.listdir(directory)
-                   if os.path.isdir(directory + d) and d != "src"]
-    for exp in experiments:
-        # Symlinks to source files
-        for f in src:
-            os.symlink("../../../src/" + f, exp + f)
-        # Symlink to support scripts
-        for f in support:
-            os.symlink("../" + f, exp + f)
+    # Symlinks to source files
+    for f in src:
+        os.symlink("../src/" + f, dir + f)
+    # Symlink to support scripts
+    for f in support:
+        os.symlink("../" + f, dir + f)
+    os.symlink("../submit.sh", dir + 'submit.sh')
 
-def create_submit(config, target):
+
+def create_submit(config, target_dir):
     """
     Create submit file using config.
 
     Args:
         config - Path to configuration file.
-        target - Target directory.
+        target_dir - Target directory.
     """
     ncpus = config['submit']['npcus']
     mpiprocs = config['submit']['mpiprocs']
@@ -84,15 +79,17 @@ def create_submit(config, target):
               cd $PBS_O_WORKDIR
 
               mpiexec ./evol ../origin ../target
-              """)
-              .format(queue, ncpus, mpiprocs, walltime, processors, project)
-    with open(target + 'submit.sh', 'w') as f:
+              """).format(queue, ncpus, mpiprocs, walltime,
+                          processors, project)
+    with open(target_dir + 'submit.sh', 'w') as f:
         f.write(submit)
 
+
 def main():
-    parser = argparse.ArgumentParser(description='Create experiment for ANSELM.')
+    parser = argparse.ArgumentParser(
+        description='Create experiment for ANSELM.')
     parser.add_argument('-c', '--config', required=True,
-                        help='configuration of experiments')    
+                        help='configuration of experiments')
     parser.add_argument('-o', '--output', default="./experiments",
                         help='output dir for experiments')
     args = parser.parse_args()
@@ -102,7 +99,7 @@ def main():
 
     # Create dirs, where experiment will be stored
     # Every couple have its own dir
-    for pat in re.match("exp_.+", config.sections()):
+    for pat in [x for x in config.sections() if re.match("exp_.+", x)]:
         # Path to pattern dir
         pat_dir = "{}/{}/".format(args.output, pat[pat.find('_') + 1:])
         # Check if already exist, if exist remove
@@ -117,17 +114,20 @@ def main():
         shutil.copy(config[pat]['origin'], pat_dir + "origin")
         shutil.copy(config[pat]['target'], pat_dir + "target")
 
+        # create submit.sh
+        create_submit(config, pat_dir)
+
         # Creation of experiment
         # difference is only in local_params.h
-        for exp in args.params:
+        for exp in re.split(',', config['default']['params']):
             logger.debug(" Sub-experiment {}".format(exp))
             exp_dir = pat_dir + exp.split("/")[-1] + "/"
             os.mkdir(exp_dir)
             # Variant local.params.h
             shutil.copy(exp, exp_dir + "local_params.h")
+            # Create symlinks inside experiment dir
+            create_symlinks(exp_dir)
 
-        # Create symlinks inside experiment dirs
-        create_symlinks(pat_dir)
 
 if __name__ == "__main__":
     main()

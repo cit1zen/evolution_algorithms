@@ -3,33 +3,21 @@
 * Description: TODO
 */
 
-
 #ifndef CA_H
 #define CA_H
-
 
 /*
 * Gets cell state
 * unsigned ... coordinates of cell
-* x axis, y axis, z axis, ...
 */
-#if CA_DIMENSIONS == 2
 unsigned get_cell( unsigned * CA, unsigned width, unsigned height);
-#else
-unsigned get_cell( unsigned * CA, ... );
-#endif
 
 /*
 * Sets cell state
 * unsigned new_state
 * unsigned ... coordinates of cell
-* x axis, y axis, z axis, ...
 */
-#if CA_DIMENSIONS == 2
 void set_cell( unsigned * CA, unsigned new_state, unsigned width, unsigned height);
-#else
-void set_cell( unsigned * CA, unsigned new_state, ... );
-#endif
 /*
 * Do num_cycles without evaluating fitness
 * unsigned num_cycles: number of cycles

@@ -36,9 +36,9 @@ unsigned rand_init()
 void print_params(unsigned seed)
 {
 	// Normal info
-	printf("|SEED:%u|STATES:%u|SIZE:%u|DIM:%u",seed,STATES_COUNT,CA_SIZE,CA_DIMENSIONS);
-	printf("|POP:%u|MAX_FIT:%u|CYCLES:%u",POPULATION_SIZE,MAX_FITNESS,CYCLES);
-	printf("|NO_CON_CYCLES:%u|FULL_GEN:%u",NON_EVAL_CYCLES,GENERATIONS);
+	printf("|SEED:%u|STATES:%u|WIDTH:%u|HEIGHT:%u",seed,STATES_COUNT,WIDTH_PARAM,HEIGHT_PARAM);
+	printf("|CYCLES:%u",CYCLES);
+	printf("|GEN:%u",GENERATIONS);
 	// Hood
 	#ifdef VON_NEUMANN
 		printf("|HOOD:VON_NEUMANN");

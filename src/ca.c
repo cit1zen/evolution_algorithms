@@ -19,45 +19,17 @@
 * unsigned ... coordinates of cell
 * x axis, y axis, z axis, ...
 */
-#if CA_DIMENSIONS == 2
 unsigned get_cell( unsigned * CA, unsigned width, unsigned height)
 {
-	if ((width < CA_SIZE) && (height < CA_SIZE))
+	if ((width < WIDTH_PARAM) && (height < HEIGHT_PARAM))
 	{
-		return CA[(height*CA_SIZE)+width];
+		return CA[(height*WIDTH_PARAM)+width];
 	}
 	else
-	{
+	{	
 		return 0;
 	}
 }
-#else
-unsigned get_cell( unsigned * CA, ... )
-{
-	va_list arguments;
-	unsigned position = 0;
-
-	va_start ( arguments, CA );
-
-	for ( int x = 0; x < CA_DIMENSIONS ; x++ )        
-	{
-		// va_arg( arguments, unsigned ) 				: position at axis
-		// (( x * CA_SIZE ):( x * CA_SIZE )?1)          : axis multiplier
-		unsigned axis_position = va_arg( arguments, unsigned );
-		// If axis position is inside CA
-		if ( axis_position < CA_SIZE )
-			position += axis_position * (( x * CA_SIZE )?( x * CA_SIZE ):1);
-		// If outside of CA
-		else
-		{
-			va_end ( arguments );
-			return 0;
-		}
-	}
-	va_end ( arguments );
-	return CA[position];
-}
-#endif
 
 /*
 * Sets cell state
@@ -65,40 +37,13 @@ unsigned get_cell( unsigned * CA, ... )
 * unsigned ... coordinates of cell
 * x axis, y axis, z axis, ...
 */
-#if CA_DIMENSIONS == 2
 void set_cell( unsigned * CA, unsigned new_state, unsigned width, unsigned height)
 {
-	if ((width < CA_SIZE) && (height < CA_SIZE))
+	if ((width < WIDTH_PARAM) && (height < HEIGHT_PARAM))
 	{
-		CA[(height*CA_SIZE)+width] = new_state;
+		CA[(height*WIDTH_PARAM)+width] = new_state;
 	}
 }
-#else
-void set_cell( unsigned * CA, unsigned new_state, ... )
-{
-	va_list arguments;
-	unsigned position = 0;
-
-	va_start ( arguments, new_state );
-
-	for ( int x = 0; x < CA_DIMENSIONS ; x++ )        
-	{
-		// va_arg( arguments, unsigned ) 				: position at axis
-		// (( x * CA_SIZE ):( x * CA_SIZE )?1)          : axis multiplier
-		unsigned axis_position = va_arg( arguments, unsigned );
-		// If axis position is inside CA
-		if ( axis_position < CA_SIZE )
-			position += axis_position * (( x * CA_SIZE )?( x * CA_SIZE ):1);
-		// If outside of CA
-		else
-			break;
-		
-	}
-	va_end ( arguments );
-	CA[position]=new_state;
-}
-#endif
-
 
 /*
 * Do num_cycles without evaluating fitness
@@ -109,99 +54,88 @@ unsigned do_cycles( unsigned * current, unsigned * next, unsigned num_cycles , u
 {
 	for(unsigned cycle=0; cycle < num_cycles ; cycle++)
 	{
+		for(unsigned height=0;height<HEIGHT_PARAM;height++)
+		{
+			for(unsigned width=0;width<WIDTH_PARAM;width++)
+			{
+				// Cross
+				#ifdef VON_NEUMANN
 
-		#ifdef CMR
-
-			#if CA_DIMENSIONS == 2
-
-				for(unsigned height=0;height<CA_SIZE;height++)
-				{
-					for(unsigned width=0;width<CA_SIZE;width++)
+					// Position in cmr rules
+					// cmr_index points at start of cmr rule
+					unsigned changed = 0;
+					for( int cmr_index = 0 ; cmr_index < (CMR_COUNT*CMR_SIZE); cmr_index+=CMR_SIZE )
 					{
-						// Cross
-						#ifdef VON_NEUMANN
-
-							// Position in cmr rules
-							// cmr_index points at start of cmr rule
-							unsigned changed = 0;
-							for( int cmr_index = 0 ; cmr_index < (CMR_COUNT*CMR_SIZE); cmr_index+=CMR_SIZE )
-							{
-								// Decision block, every if must be true
-								// North
-								if(RESOLVE(rules[cmr_index+1],rules[cmr_index],get_cell( current, width, height-1 )))
-								{
-								// West
-								if(RESOLVE(rules[cmr_index+3],rules[cmr_index+2],get_cell( current, width-1, height )))
-								{
-								// Center
-								if(RESOLVE(rules[cmr_index+5],rules[cmr_index+4],get_cell( current, width, height )))
-								{
-								// East
-								if(RESOLVE(rules[cmr_index+7],rules[cmr_index+6],get_cell( current, width+1, height )))
-								{
-								// South
-								if(RESOLVE(rules[cmr_index+9],rules[cmr_index+8],get_cell( current, width, height+1 )))
-								// If everything fits => new state
-								{
-									set_cell(next, rules[cmr_index+10], width, height);
-									changed = 1;
-									break;								
-								}}}}}
-							}
-							if(!changed)
-							{
-								set_cell(next, get_cell( current, width, height ), width, height);
-							}
-
-						// Square
-						#elif MOORE
-
-							// Position in cmr rules
-							// cmr_index points at start of cmr rule
-							unsigned changed = 0;
-							for( int cmr_index = 0 ; cmr_index < (CMR_COUNT*CMR_SIZE); cmr_index+=CMR_SIZE )
-							{
-								// Decision block, every if must be true
-
-								// Northwest
-								if(RESOLVE(rules[cmr_index+1],rules[cmr_index],get_cell( current, width-1, height-1 )))
-								// North
-								if(RESOLVE(rules[cmr_index+3],rules[cmr_index+2],get_cell( current, width, height-1 )))
-								// Northeast
-								if(RESOLVE(rules[cmr_index+5],rules[cmr_index+4],get_cell( current, width+1, height-1 )))
-								// West
-								if(RESOLVE(rules[cmr_index+7],rules[cmr_index+6],get_cell( current, width-1, height )))
-								// Center
-								if(RESOLVE(rules[cmr_index+9],rules[cmr_index+8],get_cell( current, width, height )))
-								// East
-								if(RESOLVE(rules[cmr_index+11],rules[cmr_index+10],get_cell( current, width+1, height )))
-								// Southwest
-								if(RESOLVE(rules[cmr_index+13],rules[cmr_index+12],get_cell( current, width-1, height+1 )))
-								// South
-								if(RESOLVE(rules[cmr_index+15],rules[cmr_index+14],get_cell( current, width, height+1 )))
-								// Southeast
-								if(RESOLVE(rules[cmr_index+17],rules[cmr_index+16],get_cell( current, width+1, height+1 )))
-								{
-									set_cell( next, rules[cmr_index+18] , width, height );
-									changed = 1;
-									break;	
-								}				
-							}
-							if(!changed)
-							{
-								set_cell(next, get_cell( current, width, height ), width, height);
-							}
-
-						#endif
+						// Decision block, every if must be true
+						// North
+						if(RESOLVE(rules[cmr_index+1],rules[cmr_index],get_cell( current, width, height-1 )))
+						{
+						// West
+						if(RESOLVE(rules[cmr_index+3],rules[cmr_index+2],get_cell( current, width-1, height )))
+						{
+						// Center
+						if(RESOLVE(rules[cmr_index+5],rules[cmr_index+4],get_cell( current, width, height )))
+						{
+						// East
+						if(RESOLVE(rules[cmr_index+7],rules[cmr_index+6],get_cell( current, width+1, height )))
+						{
+						// South
+						if(RESOLVE(rules[cmr_index+9],rules[cmr_index+8],get_cell( current, width, height+1 )))
+						// If everything fits => new state
+						{
+							set_cell(next, rules[cmr_index+10], width, height);
+							changed = 1;
+							break;								
+						}}}}}
 					}
-				}
+					if(!changed)
+					{
+						set_cell(next, get_cell( current, width, height ), width, height);
+					}
 
-			#endif
+				// Square
+				#elif MOORE
 
-		#endif
+					// Position in cmr rules
+					// cmr_index points at start of cmr rule
+					unsigned changed = 0;
+					for( int cmr_index = 0 ; cmr_index < (CMR_COUNT*CMR_SIZE); cmr_index+=CMR_SIZE )
+					{
+						// Decision block, every if must be true
 
+						// Northwest
+						if(RESOLVE(rules[cmr_index+1],rules[cmr_index],get_cell( current, width-1, height-1 )))
+						// North
+						if(RESOLVE(rules[cmr_index+3],rules[cmr_index+2],get_cell( current, width, height-1 )))
+						// Northeast
+						if(RESOLVE(rules[cmr_index+5],rules[cmr_index+4],get_cell( current, width+1, height-1 )))
+						// West
+						if(RESOLVE(rules[cmr_index+7],rules[cmr_index+6],get_cell( current, width-1, height )))
+						// Center
+						if(RESOLVE(rules[cmr_index+9],rules[cmr_index+8],get_cell( current, width, height )))
+						// East
+						if(RESOLVE(rules[cmr_index+11],rules[cmr_index+10],get_cell( current, width+1, height )))
+						// Southwest
+						if(RESOLVE(rules[cmr_index+13],rules[cmr_index+12],get_cell( current, width-1, height+1 )))
+						// South
+						if(RESOLVE(rules[cmr_index+15],rules[cmr_index+14],get_cell( current, width, height+1 )))
+						// Southeast
+						if(RESOLVE(rules[cmr_index+17],rules[cmr_index+16],get_cell( current, width+1, height+1 )))
+						{
+							set_cell( next, rules[cmr_index+18] , width, height );
+							changed = 1;
+							break;	
+						}				
+					}
+					if(!changed)
+					{
+						set_cell(next, get_cell( current, width, height ), width, height);
+					}
+
+				#endif
+			}
+		}
 	}
-
 	return 0;
 }
 
@@ -211,26 +145,14 @@ unsigned do_cycles( unsigned * current, unsigned * next, unsigned num_cycles , u
 */
 void print_ca( unsigned * CA )
 {
-	#if CA_DIMENSIONS == 1
-
-		for(int i=0;i<CA_SIZE;i++)
+	for(int height=0;height<HEIGHT_PARAM;height++)
+	{
+		for(int width=0;width<WIDTH_PARAM;width++)
 		{
-			printf("%d",get_cell(CA,i));
+			printf("%d ",get_cell(CA,width,height));
 		}
 		printf("\n");
-
-	#elif CA_DIMENSIONS == 2
-
-		for(int height=0;height<CA_SIZE;height++)
-		{
-			for(int width=0;width<CA_SIZE;width++)
-			{
-				printf("%d ",get_cell(CA,width,height));
-			}
-			printf("\n");
-		}
-
-	#endif 
+	}
 }
 
 /*
@@ -244,7 +166,7 @@ void initialize_ca( unsigned * CA , char * filename )
 
 	unsigned state = 0;
 
-	for(int i=0;i< pow(CA_SIZE,CA_DIMENSIONS) && fscanf(file,"%u", &state);i++)
+	for(int i=0;i< HEIGHT_PARAM*WIDTH_PARAM && fscanf(file,"%u", &state);i++)
 	{
 		CA[i]=state;
 	}
@@ -258,7 +180,7 @@ void initialize_ca( unsigned * CA , char * filename )
 */
 void copy_ca( unsigned * origin, unsigned * target)
 {
-	for(int i=0;i< pow(CA_SIZE,CA_DIMENSIONS) ;i++)
+	for(int i=0;i< HEIGHT_PARAM*WIDTH_PARAM ;i++)
 	{
 		target[i]=origin[i];
 	}

@@ -13,9 +13,8 @@
 */
 
 // Size of cellular automaton
-#define CA_SIZE 12
-// Number of dimensions
-#define CA_DIMENSIONS 2
+#define WIDTH_PARAM 12
+#define HEIGHT_PARAM 12
 
 /*
 * =======================================================================================
@@ -81,7 +80,8 @@
 //#define MOORE
 #ifdef MOORE
 	#ifdef CMR
-		#define CMR_SIZE (pow(3,CA_DIMENSIONS)*2+1)
+		// #define CMR_SIZE (pow(3,CA_DIMENSIONS)*2+1)
+		#define CMR_SIZE (19
 	#endif
 #endif
 /*
@@ -94,7 +94,8 @@
 #define VON_NEUMANN
 #ifdef VON_NEUMANN
 	#ifdef CMR
-		#define CMR_SIZE (CA_DIMENSIONS*4+3)
+		// #define CMR_SIZE (CA_DIMENSIONS*4+3)
+		#define CMR_SIZE 11
 	#endif
 #endif
 

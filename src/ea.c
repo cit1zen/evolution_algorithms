@@ -109,7 +109,7 @@ int compar(const void * chromosome_1, const void * chromosome_2)
 
 // Creates CA and loads state of CA from file
 #define init_and_load_CA(name_of_ca, source_file) 				\
-	unsigned name_of_ca[ (int) pow(CA_SIZE,CA_DIMENSIONS) ];	\
+	unsigned name_of_ca[ (int) HEIGHT_PARAM*WIDTH_PARAM ];	\
 	initialize_ca( name_of_ca , source_file );
 
 
@@ -137,7 +137,7 @@ void evol_frame(char * original_state_file, char * target_state_file, void (*nex
 	init_and_load_CA(target_pattern, target_state_file)
 
 	// Size of automaton
-	const unsigned size_of_automaton = (int) pow(CA_SIZE,CA_DIMENSIONS);
+	const unsigned size_of_automaton = HEIGHT_PARAM*WIDTH_PARAM;
 
 	/* Evolution */
 	for(unsigned generation=0; generation<GENERATIONS ;generation++)
@@ -376,7 +376,7 @@ void MB_search(char * original_state_file, char * target_state_file )
 unsigned patt_fitness(unsigned * cellular_automaton, unsigned * pattern)
 {
 	unsigned match=0;
-	for(int i=0;i< pow(CA_SIZE,CA_DIMENSIONS) ;i++)
+	for(int i=0;i< HEIGHT_PARAM*WIDTH_PARAM ;i++)
 	{
 		if(cellular_automaton[i]==pattern[i])
 			match++;
@@ -391,7 +391,7 @@ unsigned patt_fitness(unsigned * cellular_automaton, unsigned * pattern)
 unsigned patt_stable(unsigned * cellular_automaton, unsigned * pattern, unsigned * history, unsigned cycle)
 {
 	unsigned match=0;
-	for(int i=0;i < pow(CA_SIZE,CA_DIMENSIONS) ;i++)
+	for(int i=0;i < HEIGHT_PARAM*WIDTH_PARAM ;i++)
 	{
 		if(cellular_automaton[i]==pattern[i])
 			match++;

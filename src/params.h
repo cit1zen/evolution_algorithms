@@ -13,8 +13,10 @@
 */
 
 // Size of cellular automaton
+/*
 #define WIDTH_PARAM 12
 #define HEIGHT_PARAM 12
+*/
 
 /*
 * =======================================================================================
@@ -25,11 +27,11 @@
 // Size of population, num of chromosomes
 #define POPULATION_SIZE 8
 // Number of STATES_COUNT
-#define STATES_COUNT 5
+// #define STATES_COUNT 5
 // Number of non evaluating cycles
-#define NON_EVAL_CYCLES 4
+// #define NON_EVAL_CYCLES 4
 // Number of all cycles
-#define CYCLES 10
+// #define CYCLES 10
 // Number of generations
 #define GENERATIONS 2000000
 // Number of mutations

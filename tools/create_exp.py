@@ -88,6 +88,28 @@ def create_submit(config, target_dir):
         f.write(submit)
 
 
+def create_params(config, section, target):
+    """
+    Add experiment specific params to targer file
+    (params.h|local_params.h).
+
+    Args:
+        config - configparser object.
+        section - experiment section
+        target - target file.
+    """
+    params = {}
+    for param in [x for x in config[section] if 'param_' in x]:
+        # KEY - param name
+        # VALUE - param value
+        # PARAM_WIDTH_PARAM 12
+        params[param[param.find('_') + 1:]] = config[section][param]
+    
+    with open(target, 'a') as f:
+        f.write('\n')
+        for key in params:
+            f.write("#define "+ key.upper() + " " + params[key] + '\n')
+
 def main():
     parser = argparse.ArgumentParser(
         description='Create experiment for ANSELM.')
@@ -102,34 +124,36 @@ def main():
 
     # Create dirs, where experiment will be stored
     # Every couple have its own dir
-    for pat in [x for x in config.sections() if re.match("exp_.+", x)]:
+    for exp in [x for x in config.sections() if re.match("exp_.+", x)]:
         # Path to pattern dir
-        pat_dir = "{}/{}/".format(args.output, pat[pat.find('_') + 1:])
+        exp_dir = "{}/{}/".format(args.output, exp[exp.find('_') + 1:])
         # Check if already exist, if exist remove
-        logger.info("Create experiment in {}".format(pat_dir))
-        if os.path.exists(pat_dir):
-            logger.error("{} already exist, removing".format(pat_dir))
-            shutil.rmtree(pat_dir)
-        os.mkdir(pat_dir)
+        logger.info("Create experiment in {}".format(exp_dir))
+        if os.path.exists(exp_dir):
+            logger.error("{} already exist, removing".format(exp_dir))
+            shutil.rmtree(exp_dir)
+        os.mkdir(exp_dir)
         # Copies source files and etc inside dir
-        copy_files(pat_dir)
+        copy_files(exp_dir)
         # Copies patterns inside
-        shutil.copy(config[pat]['origin'], pat_dir + "origin")
-        shutil.copy(config[pat]['target'], pat_dir + "target")
+        shutil.copy(config[exp]['origin'], exp_dir + "origin")
+        shutil.copy(config[exp]['target'], exp_dir + "target")
 
         # create submit.sh
-        create_submit(config, pat_dir)
+        create_submit(config, exp_dir)
 
-        # Creation of experiment
+        # Creation of sub-experiments
         # difference is only in local_params.h
-        for exp in re.split(',', config['default']['params']):
-            logger.debug(" Sub-experiment {}".format(exp))
-            exp_dir = pat_dir + exp.split("/")[-1] + "/"
-            os.mkdir(exp_dir)
+        for sub_exp in re.split(',', config['default']['params']):
+            logger.debug(" Sub-experiment {}".format(sub_exp))
+            sub_exp_dir = exp_dir + sub_exp.split("/")[-1] + "/"
+            os.mkdir(sub_exp_dir)
             # Variant local.params.h
-            shutil.copy(exp, exp_dir + "local_params.h")
+            shutil.copy(sub_exp, sub_exp_dir + "local_params.h")
+            # Add experiment specific params into local_params.h
+            create_params(config, exp, sub_exp_dir + "local_params.h")
             # Create symlinks inside experiment dir
-            create_symlinks(exp_dir)
+            create_symlinks(sub_exp_dir)
 
 
 if __name__ == "__main__":

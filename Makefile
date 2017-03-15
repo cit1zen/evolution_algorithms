@@ -1,5 +1,14 @@
 .PHONY: all
-all:
+all: exp
+
+.PHONY: exp
+exp:
+	./tools/create_exp.py --config sets/config_exp.cfg
+	./tools/make_exp.sh
+
+.PHONY: prod
+prod:
+	./tools/create_exp.py --config sets/config_prod.cfg
 	./tools/make_exp.sh
 
 .PHONY: delete

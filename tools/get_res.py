@@ -64,7 +64,7 @@ def main():
                     if target:
                         experiment["target"] = target
                     # Save into the file
-                    with open(args.output + str(random.randint(100000, 999999)) + ".json","w") as w:
+                    with open(args.output + experiment['seed'] + ".json","w") as w:
                         json.dump(experiment, w, ensure_ascii=False)
     # Print out stats
     print("SUCC: {}".format(SUCC))

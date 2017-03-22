@@ -1,12 +1,13 @@
 #!/bin/sh
 
+cd experiments
+
 for experiment in *; do
 	if [ -d $experiment ]; then
 		cd $experiment
-		echo "Running" $experiment
+		echo "Running " $experiment
 		for set in *; do
-			if [ -d $set ]; then
-				echo "  "$set
+			if [ -d $set ] && [ $set != 'src' ]; then
 				cd $set
 					./###QSUB.SH
 				cd ..
@@ -15,3 +16,4 @@ for experiment in *; do
 		cd ..
 	fi
 done
+cd ..

@@ -4,12 +4,10 @@ all: exp
 .PHONY: exp
 exp:
 	./tools/create_exp.py --config sets/config_exp.cfg
-	./tools/make_exp.sh
 
 .PHONY: prod
 prod:
 	./tools/create_exp.py --config sets/config_prod.cfg
-	./tools/make_exp.sh
 
 .PHONY: delete
 delete:
@@ -25,6 +23,7 @@ clean:
 
 .PHONY: run
 run:
+	./tools/make_exp.sh
 	./tools/run_exp.sh
 
 .PHONY: stop
@@ -37,4 +36,4 @@ result:
 
 .PHONY: status
 status:
-	./tools/xorman00
+	./tools/xorman.sh

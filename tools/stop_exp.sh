@@ -7,7 +7,7 @@ for experiment in *; do
 		cd $experiment
 		echo "Terminating" $experiment
 		for set in *; do
-			if [ -d $set ]; then
+			if [ -d $set ] && [ $set != 'src' ]; then
 				cd $set
 					./#QDEL.SH
 				cd ..

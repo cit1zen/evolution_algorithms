@@ -7,14 +7,14 @@ all: evol
 
 evol: ca.o ea.o evol.o 
 	$(comp) $@.o ca.o ea.o -lm -o $@
-evol.o: $(source_dir)main.c $(source_dir)params.h
-	$(comp) -c $(source_dir)main.c -o $@
+evol.o: main.c params.h local_params.h
+	$(comp) -c main.c -o $@
 
-ea.o: $(source_dir)ea.c $(source_dir)ea.h $(source_dir)params.h
-	$(comp) -c $(source_dir)ea.c -o $@
+ea.o: ea.c ea.h params.h local_params.h
+	$(comp) -c ea.c -o $@
 
-ca.o: $(source_dir)ca.c $(source_dir)ca.h $(source_dir)params.h
-	$(comp) -c $(source_dir)ca.c -o $@
+ca.o: ca.c ca.h params.h local_params.h
+	$(comp) -c ca.c -o $@
 
 PHONY: clean
 

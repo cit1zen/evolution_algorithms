@@ -12,6 +12,10 @@
 #include "ca.h"
 #include "ea.h"
 
+#ifdef DEBUG
+// Control sum
+unsigned EA_CONTROL_SUM = 0;
+#endif
 
 ///////////////////////////////////
 // Support functions and macros  //
@@ -88,11 +92,21 @@ void print_chromosome( struct chromosome * chromosome )
 
 // Turnament selection
 // return index of winner
-inline unsigned turnament( struct chromosome * chromosomes )
+unsigned turnament( struct chromosome * chromosomes )
 {
+	#ifdef DEBUG
+	EA_CONTROL_SUM = 0;
+	for(unsigned chromosome_index=0;chromosome_index<POPULATION_SIZE;chromosome_index++)
+	{
+		printf("[%u] %u ", chromosome_index, chromosomes[chromosome_index].fitness);
+		EA_CONTROL_SUM += chromosomes[chromosome_index].fitness;
+	}
+	printf("\n");
+	#endif
+
 	unsigned best_index = rand()%POPULATION_SIZE;
 	// Because first one is randomly selected
-	for( unsigned turnament_round = 1; turnament_round < TURNAMENT_ROUNDS; turnament_round++ )
+	for( unsigned turnament_round = 0; turnament_round < TURNAMENT_ROUNDS; turnament_round++ )
 	{
 		unsigned opponent_index = rand()%POPULATION_SIZE;
 		if( chromosomes[best_index].fitness < chromosomes[opponent_index].fitness )
@@ -241,15 +255,19 @@ void ES_next_gen(struct chromosome * current_pop, struct chromosome * next_pop )
 {
 	// Find best chromosome
 	unsigned best_chromosome_index=0;
+	#ifdef DEBUG
+	printf("ES\n");
+	#endif
 	for(unsigned chromosome_index=0;chromosome_index<POPULATION_SIZE;chromosome_index++)
 	{
 		#ifdef DEBUG
-		printf("%i ", current_pop[chromosome_index].fitness);
+		printf("[%u] %u ", chromosome_index, current_pop[chromosome_index].fitness);
 		#endif
 		if(current_pop[best_chromosome_index].fitness<current_pop[chromosome_index].fitness)
 			best_chromosome_index=chromosome_index;
 	}
 	#ifdef DEBUG
+	fflush(stdout);
 	printf("\n");
 	#endif
 
@@ -271,15 +289,27 @@ void ES_search(char * original_state_file, char * target_state_file)
 
 void GA_ELIT_next_gen(struct chromosome * current_pop, struct chromosome * next_pop)
 {
+	#ifdef DEBUG
+	printf("GA_ELIT\n");
+	#endif
+
 	// Choose new parent in turnament
 	unsigned parent_chromosome_index = turnament(current_pop);
 
 	#ifdef DEBUG
+	unsigned ANOTHER_SUM = 0;
 	for(unsigned chromosome_index=0;chromosome_index<POPULATION_SIZE;chromosome_index++)
 	{
-		printf("%i ", current_pop[chromosome_index].fitness);
+		printf("[%u] %u ", chromosome_index, current_pop[chromosome_index].fitness);
+		ANOTHER_SUM += current_pop[chromosome_index].fitness;
 	}
+	fflush(stdout);
 	printf("\n");
+	if (EA_CONTROL_SUM != ANOTHER_SUM)
+	{
+		printf("SUM ERROR\n");
+		exit(1);
+	}
 	#endif
 
 	// Elitism
@@ -303,15 +333,26 @@ void GA_ELIT_search(char * original_state_file, char * target_state_file )
 
 void GA_NO_ELIT_next_gen(struct chromosome * current_pop, struct chromosome * next_pop )
 {
+	#ifdef DEBUG
+	printf("GA_NO_ELIT\n");
+	#endif
 	// Choose new parent in turnament
 	unsigned parent_chromosome_index = turnament( current_pop );
 
 	#ifdef DEBUG
+	unsigned ANOTHER_SUM = 0;
 	for(unsigned chromosome_index=0;chromosome_index<POPULATION_SIZE;chromosome_index++)
 	{
-		printf("%i ", current_pop[chromosome_index].fitness);
+		printf("[%u] %u ", chromosome_index, current_pop[chromosome_index].fitness);
+		ANOTHER_SUM += current_pop[chromosome_index].fitness;
 	}
+	fflush(stdout);
 	printf("\n");
+	if (EA_CONTROL_SUM != ANOTHER_SUM)
+	{
+		printf("SUM ERROR\n");
+		exit(1);
+	}
 	#endif
 
 	// Create new pop
@@ -337,6 +378,9 @@ void MB_next_gen(struct chromosome * current_pop, struct chromosome * next_pop )
 
 	// Selecting parent
 	unsigned last_best = 0;
+	#ifdef DEBUG
+	printf("MB\n");
+	#endif
 	for(unsigned chromosome_index=0;chromosome_index<POPULATION_SIZE;chromosome_index++)
 	{
 		if (current_pop[chromosome_index].fitness==current_pop[0].fitness)
@@ -350,6 +394,7 @@ void MB_next_gen(struct chromosome * current_pop, struct chromosome * next_pop )
 			break;
 	}
 	#ifdef DEBUG
+	fflush(stdout);
 	printf("\n");
 	#endif
 	unsigned parent_chromosome_index = rand()%last_best;

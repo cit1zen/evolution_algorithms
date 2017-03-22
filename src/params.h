@@ -83,7 +83,7 @@
 #ifdef MOORE
 	#ifdef CMR
 		// #define CMR_SIZE (pow(3,CA_DIMENSIONS)*2+1)
-		#define CMR_SIZE (19
+		#define CMR_SIZE 19
 	#endif
 #endif
 /*
@@ -114,13 +114,13 @@
 // Maximal fitness
 // Defined in local_params.h
 // #define MAX_FITNESS (pow(CA_SIZE,CA_DIMENSIONS))
-// #define MAX_FITNESS 144
+// #define MAX_FITNESS HEIGHT_PARAM*WIDTH_PARAM
 
 // Fitness function for stable patterns or 
 #define PATTERN_STABLE
 #define TEST_FRAME 2
-// #define MAX_FITNESS (2*pow(CA_SIZE,CA_DIMENSIONS))
-#define MAX_FITNESS 288
+// // #define MAX_FITNESS (2*pow(CA_SIZE,CA_DIMENSIONS))
+#define MAX_FITNESS 2*HEIGHT_PARAM*WIDTH_PARAM
 
 /*
 * ==================================================================
@@ -143,4 +143,4 @@
 //#define GA_NO_ELIT
 
 // TODO name for this algorithm
-#define MB
+// #define MB

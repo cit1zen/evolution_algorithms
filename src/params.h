@@ -113,14 +113,19 @@
 // #define PATTERN_FITNESS
 // Maximal fitness
 // Defined in local_params.h
-// #define MAX_FITNESS (pow(CA_SIZE,CA_DIMENSIONS))
-// #define MAX_FITNESS HEIGHT_PARAM*WIDTH_PARAM
+
 
 // Fitness function for stable patterns or 
-#define PATTERN_STABLE
-#define TEST_FRAME 2
-// // #define MAX_FITNESS (2*pow(CA_SIZE,CA_DIMENSIONS))
-#define MAX_FITNESS 2*HEIGHT_PARAM*WIDTH_PARAM
+// #define PATTERN_STABLE
+#define TEST_FRAME 10
+
+
+#ifdef PATTERN_FITNESS
+	#define MAX_FITNESS HEIGHT_PARAM*WIDTH_PARAM
+#endif
+#ifdef PATTERN_STABLE
+	#define MAX_FITNESS 2*HEIGHT_PARAM*WIDTH_PARAM
+#endif
 
 /*
 * ==================================================================

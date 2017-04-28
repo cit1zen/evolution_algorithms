@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python2
 # Creates experiment with evo. algorithm
 
 import re
@@ -6,7 +6,7 @@ import os
 import shutil
 import logging
 import argparse
-import configparser
+import ConfigParser
 
 
 logger = logging.getLogger(__name__)
@@ -64,26 +64,26 @@ def create_submit(config, target_dir):
         config - Path to configuration file.
         target_dir - Target directory.
     """
-    ncpus = config['submit']['npcus']
-    mpiprocs = config['submit']['mpiprocs']
-    walltime = config['submit']['walltime']
-    processors = config['submit']['processors']
-    project = config['submit']['project']
-    queue = config['submit']['queue']
-    submit = ("""#!/bin/bash
-              #PBS -q {}
-              #PBS -N CAE
-              #PBS -l select=1:ncpus={}:mpiprocs={},walltime={}
-              #PBS -J 1-{}
-              #PBS -A {}
-
-              module load OpenMPI
-
-              cd $PBS_O_WORKDIR
-
-              mpiexec ./evol ../origin ../target
-              """).format(queue, ncpus, mpiprocs, walltime,
-                          processors, project)
+    ncpus = config.get('submit', 'npcus')
+    mpiprocs = config.get('submit', 'mpiprocs')
+    walltime = config.get('submit', 'walltime')
+    processors = config.get('submit', 'processors')
+    project = config.get('submit', 'project')
+    queue = config.get('submit', 'queue')
+    submit = ("#!/bin/bash\n"
+              "#PBS -q {}\n"
+              "#PBS -N CAE\n"
+              "#PBS -l select=1:ncpus={}:mpiprocs={},walltime={}\n"
+              "#PBS -J 1-{}\n"
+              "#PBS -A {}\n"
+              "\n"
+              "module load OpenMPI\n"
+              "\n"
+              "cd $PBS_O_WORKDIR\n"
+              "\n"
+              "mpiexec ./evol ../origin ../target\n"
+              ).format(queue, ncpus, mpiprocs, walltime,
+                       processors, project)
     with open(target_dir + 'submit.sh', 'w') as f:
         f.write(submit)
 
@@ -99,11 +99,11 @@ def create_params(config, section, target):
         target - target file.
     """
     params = {}
-    for param in [x for x in config[section] if 'param_' in x]:
+    for param in [x for x in config.options(section) if 'param_' in x]:
         # KEY - param name
         # VALUE - param value
         # PARAM_WIDTH_PARAM 12
-        params[param[param.find('_') + 1:]] = config[section][param]
+        params[param[param.find('_') + 1:]] = config.get(section, param)
     
     with open(target, 'a') as f:
         f.write('\n')
@@ -119,7 +119,7 @@ def main():
                         help='output dir for experiments')
     args = parser.parse_args()
 
-    config = configparser.ConfigParser()
+    config = ConfigParser.ConfigParser()
     config.read(args.config)
 
     # Create dirs, where experiment will be stored
@@ -136,15 +136,15 @@ def main():
         # Copies source files and etc inside dir
         copy_files(exp_dir)
         # Copies patterns inside
-        shutil.copy(config[exp]['origin'], exp_dir + "origin")
-        shutil.copy(config[exp]['target'], exp_dir + "target")
+        shutil.copy(config.get(exp, 'origin'), exp_dir + "origin")
+        shutil.copy(config.get(exp, 'target'), exp_dir + "target")
 
         # create submit.sh
         create_submit(config, exp_dir)
 
         # Creation of sub-experiments
         # difference is only in local_params.h
-        for sub_exp in re.split(',', config['default']['params']):
+        for sub_exp in re.split(',', config.get('default', 'params')):
             logger.debug(" Sub-experiment {}".format(sub_exp))
             sub_exp_dir = exp_dir + sub_exp.split("/")[-1] + "/"
             os.mkdir(sub_exp_dir)

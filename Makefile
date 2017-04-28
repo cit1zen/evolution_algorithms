@@ -8,6 +8,8 @@ exp:
 .PHONY: prod
 prod:
 	./tools/create_exp.py --config sets/config_prod.cfg
+	./tools/create_exp.py --config sets/config_patterns.cfg
+	./tools/create_exp.py --config sets/config_letters.cfg
 
 .PHONY: delete
 delete:

@@ -66,6 +66,29 @@ unsigned do_cycles( unsigned * current, unsigned * next, unsigned num_cycles , u
 					unsigned changed = 0;
 					for( int cmr_index = 0 ; cmr_index < (CMR_COUNT*CMR_SIZE); cmr_index+=CMR_SIZE )
 					{
+						// Skip rules that cause blinking of lattice
+						#ifdef SKIP_BLINK
+							// Decision block, every if must be true
+							// North
+							if(RESOLVE(rules[cmr_index+1],rules[cmr_index], 0))
+							{
+							// West
+							if(RESOLVE(rules[cmr_index+3],rules[cmr_index+2], 0))
+							{
+							// Center
+							if(RESOLVE(rules[cmr_index+5],rules[cmr_index+4], 0))
+							{
+							// East
+							if(RESOLVE(rules[cmr_index+7],rules[cmr_index+6], 0))
+							{
+							// South
+							if(RESOLVE(rules[cmr_index+9],rules[cmr_index+8], 0))
+							// If everything fits => new state
+							{
+								continue;
+							}}}}}
+						#endif
+						
 						// Decision block, every if must be true
 						// North
 						if(RESOLVE(rules[cmr_index+1],rules[cmr_index],get_cell( current, width, height-1 )))
@@ -101,8 +124,32 @@ unsigned do_cycles( unsigned * current, unsigned * next, unsigned num_cycles , u
 					unsigned changed = 0;
 					for( int cmr_index = 0 ; cmr_index < (CMR_COUNT*CMR_SIZE); cmr_index+=CMR_SIZE )
 					{
-						// Decision block, every if must be true
+						// Skip rules that cause blinking of lattice
+						#ifdef SKIP_BLINK
+							// Northwest
+							if(RESOLVE(rules[cmr_index+1],rules[cmr_index], 0))
+							// North
+							if(RESOLVE(rules[cmr_index+3],rules[cmr_index+2], 0))
+							// Northeast
+							if(RESOLVE(rules[cmr_index+5],rules[cmr_index+4], 0))
+							// West
+							if(RESOLVE(rules[cmr_index+7],rules[cmr_index+6], 0))
+							// Center
+							if(RESOLVE(rules[cmr_index+9],rules[cmr_index+8], 0))
+							// East
+							if(RESOLVE(rules[cmr_index+11],rules[cmr_index+10], 0))
+							// Southwest
+							if(RESOLVE(rules[cmr_index+13],rules[cmr_index+12], 0))
+							// South
+							if(RESOLVE(rules[cmr_index+15],rules[cmr_index+14], 0))
+							// Southeast
+							if(RESOLVE(rules[cmr_index+17],rules[cmr_index+16], 0))
+							{
+								continue;
+							}
+						#endif
 
+						// Decision block, every if must be true
 						// Northwest
 						if(RESOLVE(rules[cmr_index+1],rules[cmr_index],get_cell( current, width-1, height-1 )))
 						// North

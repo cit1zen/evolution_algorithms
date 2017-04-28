@@ -82,9 +82,10 @@ void print_chromosome( struct chromosome * chromosome )
 {
 	for(unsigned cmr=0; cmr<CMR_COUNT;cmr++)
 	{
-		for(unsigned i=0;i<CMR_SIZE;i++)
+		printf("%u", chromosome->dna[(cmr*CMR_SIZE)]);
+		for(unsigned i=1;i<CMR_SIZE;i++)
 		{
-			printf("%u", chromosome->dna[(cmr*CMR_SIZE)+i]);
+			printf("-%u", chromosome->dna[(cmr*CMR_SIZE)+i]);
 		}
 		printf(" ");
 	}
@@ -190,6 +191,7 @@ void evol_frame(char * original_state_file, char * target_state_file, void (*nex
 
 				#ifdef PATTERN_FITNESS
 				fitness = patt_fitness(next, target_pattern);
+				// Best fitness is fitness of whole chromosome
 				if(fitness > current_pop[chromosome_index].fitness)
 				{
 					current_pop[chromosome_index].fitness = fitness;
@@ -198,6 +200,7 @@ void evol_frame(char * original_state_file, char * target_state_file, void (*nex
 
 				#ifdef PATTERN_STABLE
 				fitness = patt_stable(next, target_pattern, history, cycle);
+				// Best fitness is fitness of whole chromosome
 				if(fitness > current_pop[chromosome_index].fitness)
 				{
 					current_pop[chromosome_index].fitness = fitness;
@@ -209,25 +212,8 @@ void evol_frame(char * original_state_file, char * target_state_file, void (*nex
 				{
 					printf("SUCCESS|GENERATION:%u|LEN:%u|RULES:",generation,cycle);
 					print_chromosome( &current_pop[chromosome_index] );
-					
-					/*
-					copy_ca( origin_pattern, current);
-					print_ca( current);
-					for(unsigned i=0; i<=cycle;i++)
-					{		
-						printf("\n");
-						do_cycles( current, next, 1, current_pop[ chromosome_index ].dna);
-						print_ca( next);
-						
-						unsigned * temp = current;
-						current = next;
-						next = temp;
-					}
-					*/
-					
 					return;
 				}
-
 				/* Switch of lattices */
 				unsigned * temp = current;
 				current = next;
@@ -421,7 +407,7 @@ void MB_search(char * original_state_file, char * target_state_file )
 unsigned patt_fitness(unsigned * cellular_automaton, unsigned * pattern)
 {
 	unsigned match=0;
-	for(int i=0;i< HEIGHT_PARAM*WIDTH_PARAM ;i++)
+	for(int i=0;i<HEIGHT_PARAM*WIDTH_PARAM;i++)
 	{
 		if(cellular_automaton[i]==pattern[i])
 			match++;

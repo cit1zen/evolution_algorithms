@@ -1,0 +1,12 @@
+/*
+* Author: xorman00  <xorman00@stud.fit.vutbr.cz>
+* Description: Redefinition for experiment
+*/
+
+
+#define CMR_COUNT 30
+
+#undef GA
+#undef MB
+#undef GA_NO_ELIT
+#define ES

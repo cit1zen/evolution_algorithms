@@ -21,6 +21,7 @@ def main():
     SUCC = 0
     FAIL = 0
     AVE_CYC = 0
+    AVE_GEN = 0
 
     # Get origin pattern, seed
     origin = {}
@@ -34,13 +35,16 @@ def main():
 
     print("Results of %s" % os.getcwd().split("/")[-1])
     # Process experiments
-    for name in args.input:    
+    for name in args.input:
+        # Not result file
+        if 'CAE' not in name:
+            continue
         with open(name, "r") as f:
             # Get experiment results
             # one line one expetiment
             for l in f:
                 # HotFix for broken results
-                l = re.sub("(?<=[0-9])\|(?=[0-9])", '-', l)
+                # l = re.sub("(?<=[0-9])\|(?=[0-9])", '-', l)
 
                 exp = {}
                 for member in l.split("|"):
@@ -57,6 +61,8 @@ def main():
                     elif "CYCLES" in val[0]:
                         exp["CYCLES"] = val[1]
                         AVE_CYC += int(val[1])
+                    elif "GENERATION" in val[0]:
+                        AVE_GEN += int(val[1])
                     elif "RULES" in val[0]:
                         # List compr. because of blank rules
                         val[0] = re.sub("\n", '', val[0])
@@ -85,7 +91,7 @@ def main():
     print("SUCC: {}".format(SUCC))
     print("FAIL: {}".format(FAIL))
     print("AVERAGE CYCLES: {}".format(AVE_CYC / SUCC))
-
+    print("AVERAGE GENERATIONS: {}".format(AVE_GEN / SUCC))
 
 def load_lattice(filename):
     """

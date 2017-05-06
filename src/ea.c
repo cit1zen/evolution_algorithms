@@ -299,13 +299,17 @@ void GA_ELIT_next_gen(struct chromosome * current_pop, struct chromosome * next_
 	#endif
 
 	// Elitism
-	copy_chromosome( &current_pop[parent_chromosome_index] , &next_pop[0]);
+	// Index where unchanged parent will be copied
+	unsigned elitism_index = rand()%POPULATION_SIZE;
 
 	// Create new pop
-	for(unsigned chromosome_index=1; chromosome_index<POPULATION_SIZE; chromosome_index++)
+	for(unsigned chromosome_index=0; chromosome_index<POPULATION_SIZE; chromosome_index++)
 	{
 		copy_chromosome(&current_pop[parent_chromosome_index], &next_pop[chromosome_index]);
-		mutate_chromosome(&next_pop[chromosome_index], rand()%(MAX_MUTATIONS-MIN_MUTATIONS) + MIN_MUTATIONS);
+		if (elitism_index != chromosome_index)
+		{
+			mutate_chromosome(&next_pop[chromosome_index], rand()%(MAX_MUTATIONS-MIN_MUTATIONS) + MIN_MUTATIONS);
+		}
 	}
 }
 

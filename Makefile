@@ -1,5 +1,5 @@
 .PHONY: all
-all: exp
+all: bp
 
 .PHONY: exp
 exp:
@@ -10,6 +10,10 @@ prod:
 	./tools/create_exp.py --config sets/config_prod.cfg
 	./tools/create_exp.py --config sets/config_patterns.cfg
 	./tools/create_exp.py --config sets/config_letters.cfg
+
+.PHONY: bp
+bp:
+	./tools/create_exp.py --config sets/config_bp.cfg
 
 .PHONY: delete
 delete:
@@ -32,7 +36,7 @@ run:
 stop:
 	./tools/stop_exp.sh
 
-.PHONY: result
+.PHONY: results
 result:
 	./tools/get_res.sh
 

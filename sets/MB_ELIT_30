@@ -3,7 +3,6 @@
 * Description: Redefinition for experiment
 */
 
-
 #define CMR_COUNT 30
 
 #undef ES
@@ -11,4 +10,4 @@
 #undef GA
 #undef GA_ELIT
 #undef MB
-#undef MB_ELIT
+#define MB_ELIT

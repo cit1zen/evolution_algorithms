@@ -40,9 +40,9 @@
 
 /* Tournament is used in :
  * GA
- * GA_NO_ELIT
+ * GA_ELIT
 */
-#define TURNAMENT_ROUNDS 3
+#define TURNAMENT_ROUNDS 4
 
 
 /*
@@ -139,13 +139,15 @@
 *  No elitism.
 */
 //#define ES
+// With elitism
+//#define ES_ELIT
 
-// Evolution algorithm with turnament selection and elitism
-// #define GA
-
-
-// Evolution algorithm with turnament selection and without elitism
-//#define GA_NO_ELIT
+// Genetic algorithm
+//#define GA
+// With elitism
+//#define GA_ELIT
 
 // TODO name for this algorithm
 // #define MB
+// With elitism
+// #define MB_ELIT

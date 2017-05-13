@@ -21,14 +21,21 @@ struct chromosome
 // Best chromosome is chosen as parent of next generation
 void ES_search(char *, char *);
 
+// Evolution strategy
+// Best chromosome is chosen as parent of next generation
+void ES_ELIT_search(char *, char *);
+
+// Genetic algorithm with turnament selection and without elitism
+void GA_search(char *, char *);
+
 // Genetic algorithm with turnament selection and elitism
 void GA_ELIT_search(char *, char *);
 
-// Genetic algorithm with turnament selection and without elitism
-void GA_NO_ELIT_search(char *, char *);
-
 // TODO name for this algorithm
 void MB_search(char *,char *);
+
+// TODO name for this algorithm
+void MB_ELIT_search(char *,char *);
 
 /*
 * Fitness fuction

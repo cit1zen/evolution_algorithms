@@ -54,15 +54,21 @@ void print_params(unsigned seed)
 	#ifdef ES
 		printf("|EVO_ALGO:ES");
 	#endif
+	#ifdef ES_ELIT
+		printf("|EVO_ALGO:ES_ELIT");
+	#endif
 	#ifdef GA
 		printf("|EVO_ALGO:GA");
 	#endif
-	#ifdef GA_NO_ELIT
-		printf("|EVO_ALGO:GA_NO_ELIT");
+	#ifdef GA_ELIT
+		printf("|EVO_ALGO:GA_ELIT");
 	#endif
 	#ifdef MB
 		printf("|EVO_ALGO:MB");
-	#endif	
+	#endif
+	#ifdef MB_ELIT
+		printf("|EVO_ALGO:MB_ELIT");
+	#endif
 	printf("\n");
 }
 
@@ -77,14 +83,20 @@ int main(int argc, char * argv[])
 		#ifdef ES
 			ES_search(argv[1], argv[2]);
 		#endif
-		#ifdef GA
-			GA_ELIT_search(argv[1], argv[2]);
+		#ifdef ES_ELIT
+			ES_ELIT_search(argv[1], argv[2]);
 		#endif
-		#ifdef GA_NO_ELIT
-			GA_NO_ELIT_search(argv[1], argv[2]);
+		#ifdef GA
+			GA_search(argv[1], argv[2]);
+		#endif
+		#ifdef GA_ELIT
+			GA_ELIT_search(argv[1], argv[2]);
 		#endif
 		#ifdef MB
 			MB_search(argv[1], argv[2]);
+		#endif
+		#ifdef MB_ELIT
+			MB_ELIT_search(argv[1], argv[2]);
 		#endif
 		print_params(seed);
 	}

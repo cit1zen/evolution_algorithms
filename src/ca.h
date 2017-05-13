@@ -18,12 +18,13 @@ unsigned get_cell( unsigned * CA, unsigned width, unsigned height);
 * unsigned ... coordinates of cell
 */
 void set_cell( unsigned * CA, unsigned new_state, unsigned width, unsigned height);
+
 /*
-* Do num_cycles without evaluating fitness
-* unsigned num_cycles: number of cycles
+* Do one generation/cycle of CA
 * pointer to CA structure
+* pointer CMR rules
 */
-unsigned do_cycles( unsigned * current, unsigned * next, unsigned num_cycles , unsigned * rules);
+void do_cycle( unsigned * current, unsigned * next, unsigned * rules);
 
 /*
 * Prints CA

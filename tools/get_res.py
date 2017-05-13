@@ -2,9 +2,12 @@
 
 import re
 import os
+import math
 import json
 import random
 import argparse
+
+import numpy
 
 def main():
     """
@@ -35,10 +38,13 @@ def main():
 
     print("Results of %s" % os.getcwd().split("/")[-1])
     # Process experiments
+    generations = []
     for name in args.input:
         # Not result file
         if 'CAE' not in name:
             continue
+        # List containing how many generations
+        # were needed to find each solution
         with open(name, "r") as f:
             # Get experiment results
             # one line one expetiment
@@ -51,18 +57,15 @@ def main():
                     val = member.split(":")
                     if "SUCCESS" in val[0]:
                         SUCC += 1
-                    elif "FAIL" in val[0]:
+                    if "FAIL" in val[0]:
                         FAIL += 1
                         break
                     elif "HEIGHT" in val[0]:
                         exp['ROWS'] = val[1]
                     elif "WIDTH" in val[0]:
                         exp['COLS'] = val[1]
-                    elif "CYCLES" in val[0]:
-                        exp["CYCLES"] = val[1]
-                        AVE_CYC += int(val[1])
                     elif "GENERATION" in val[0]:
-                        AVE_GEN += int(val[1])
+                        generations.append(int(val[1]))
                     elif "RULES" in val[0]:
                         # List compr. because of blank rules
                         val[0] = re.sub("\n", '', val[0])
@@ -88,10 +91,12 @@ def main():
                                   ensure_ascii=False,
                                   indent=4)
     # Print out stats
-    print("SUCC: {}".format(SUCC))
-    print("FAIL: {}".format(FAIL))
-    print("AVERAGE CYCLES: {}".format(AVE_CYC / SUCC))
-    print("AVERAGE GENERATIONS: {}".format(AVE_GEN / SUCC))
+    print("SUCC: {}".format(len(generations)))
+    print("MAX: {}".format(max(generations) if generations else '-'))
+    print("MIN: {}".format(min(generations) if generations else '-'))
+    print("AVE: {}".format(numpy.mean(generations)) if generations else '-')
+    print("STD: {}".format(numpy.std(generations)) if generations else '-')
+
 
 def load_lattice(filename):
     """

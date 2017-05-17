@@ -2,7 +2,6 @@
 
 comp=gcc -O3 -std=c99 -Wall -Wextra -pedantic -lm
 
-# Vytvori vsetky potrebne subory
 all: evol
 
 evol: ca.o ea.o evol.o 
@@ -17,6 +16,5 @@ ca.o: ca.c ca.h params.h local_params.h
 	$(comp) -c ca.c -o $@
 
 PHONY: clean
-
 clean:
 	rm *.o evol

@@ -1,6 +1,6 @@
 /*
 * Author: xorman00  <xorman00@stud.fit.vutbr.cz>
-* Description: TODO
+* Description: EA code
 */
 
 #include <math.h>
@@ -342,8 +342,8 @@ void GA_ELIT_search(char * original_state_file, char * target_state_file )
 }
 
 
-/* MB algorithm */
-void MB_next_gen(struct chromosome * current_pop, struct chromosome * next_pop )
+/* ESP algorithm */
+void ESP_next_gen(struct chromosome * current_pop, struct chromosome * next_pop )
 {
 	// Sorting according to fitness
 	qsort(current_pop, POPULATION_SIZE, sizeof(struct chromosome), compar);
@@ -369,14 +369,14 @@ void MB_next_gen(struct chromosome * current_pop, struct chromosome * next_pop )
 	}
 }
 
-void MB_search(char * original_state_file, char * target_state_file )
+void ESP_search(char * original_state_file, char * target_state_file )
 {
-	evol_frame(original_state_file,target_state_file,MB_next_gen);
+	evol_frame(original_state_file,target_state_file,ESP_next_gen);
 }
 
 
-/* MB algorithm with elitism*/
-void MB_ELIT_next_gen(struct chromosome * current_pop, struct chromosome * next_pop )
+/* ESP algorithm with elitism*/
+void ESP_ELIT_next_gen(struct chromosome * current_pop, struct chromosome * next_pop )
 {
 	// Sorting according to fitness
 	qsort(current_pop, POPULATION_SIZE, sizeof(struct chromosome), compar);
@@ -409,15 +409,15 @@ void MB_ELIT_next_gen(struct chromosome * current_pop, struct chromosome * next_
 	}
 }
 
-void MB_ELIT_search(char * original_state_file, char * target_state_file)
+void ESP_ELIT_search(char * original_state_file, char * target_state_file)
 {
-	evol_frame(original_state_file, target_state_file, MB_ELIT_next_gen);
+	evol_frame(original_state_file, target_state_file, ESP_ELIT_next_gen);
 }
 
 /* Fitness functions */
 
 /*
-* Matches current state of CA to pattern and return number of matching cells	
+* Matches current state of CA to pattern and return count of matching cells	
 */
 unsigned patt_fitness(unsigned * cellular_automaton, unsigned * pattern)
 {

@@ -1,6 +1,6 @@
 /*
 * Author: xorman00  <xorman00@stud.fit.vutbr.cz>
-* Description: TODO
+* Description: EA header
 */
 
 #ifndef EA
@@ -31,15 +31,14 @@ void GA_search(char *, char *);
 // Genetic algorithm with turnament selection and elitism
 void GA_ELIT_search(char *, char *);
 
-// TODO name for this algorithm
-void MB_search(char *,char *);
+// ESP version of evolution strategy
+void ESP_search(char *,char *);
 
-// TODO name for this algorithm
-void MB_ELIT_search(char *,char *);
+// ESP version of evolution strategy with elitism
+void ESP_ELIT_search(char *,char *);
 
 /*
-* Fitness fuction
-* return fitness
+* Fitness fuctions
 */
 unsigned patt_fitness(unsigned *,unsigned *);
 unsigned patt_stable(unsigned *, unsigned *, unsigned *, unsigned);

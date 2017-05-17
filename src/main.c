@@ -1,6 +1,6 @@
 /*
 * Author: xorman00  <xorman00@stud.fit.vutbr.cz>
-* Description: TODO
+* Description: Main
 */
 
 #include <stdio.h>
@@ -63,16 +63,20 @@ void print_params(unsigned seed)
 	#ifdef GA_ELIT
 		printf("|EVO_ALGO:GA_ELIT");
 	#endif
-	#ifdef MB
-		printf("|EVO_ALGO:MB");
+	#ifdef ESP
+		printf("|EVO_ALGO:ESP");
 	#endif
-	#ifdef MB_ELIT
-		printf("|EVO_ALGO:MB_ELIT");
+	#ifdef ESP_ELIT
+		printf("|EVO_ALGO:ESP_ELIT");
 	#endif
 	printf("\n");
 }
 
-// TODO add some arguments maybe
+/*
+* Main
+* 1st argument: Lattice at beggining
+* 2nd argument: Target state of lattice
+*/
 int main(int argc, char * argv[])
 {
 	// RNG
@@ -92,11 +96,11 @@ int main(int argc, char * argv[])
 		#ifdef GA_ELIT
 			GA_ELIT_search(argv[1], argv[2]);
 		#endif
-		#ifdef MB
-			MB_search(argv[1], argv[2]);
+		#ifdef ESP
+			ESP_search(argv[1], argv[2]);
 		#endif
-		#ifdef MB_ELIT
-			MB_ELIT_search(argv[1], argv[2]);
+		#ifdef ESP_ELIT
+			ESP_ELIT_search(argv[1], argv[2]);
 		#endif
 		print_params(seed);
 	}

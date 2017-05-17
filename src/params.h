@@ -1,10 +1,8 @@
 /*
 * Author: xorman00  <xorman00@stud.fit.vutbr.cz>
-* Description: TODO
+* Description: Global parameters of experiments
 */
 
-// Debug mode
-// #define DEBUG
 
 /*
 * ==================================================================
@@ -24,15 +22,15 @@
 * =======================================================================================
 */
 
-// Size of population, num of chromosomes
+// Size of population, chromozome count
 #define POPULATION_SIZE 8
-// Number of STATES_COUNT
+// Number of CA states
 // #define STATES_COUNT 5
 // Number of non evaluating cycles
 // #define NON_EVAL_CYCLES 4
-// Number of all cycles
+// Number of CA steps/cycles
 // #define CYCLES 10
-// Number of generations
+// Number of EA generations
 #define GENERATIONS 2000000
 // Number of mutations
 #define MAX_MUTATIONS 3
@@ -129,7 +127,7 @@
 
 /*
 * ==================================================================
-* EU algoriths with their settings
+* EA algorithms
 * ==================================================================
 */ 
 
@@ -147,7 +145,7 @@
 // With elitism
 //#define GA_ELIT
 
-// TODO name for this algorithm
-// #define MB
+// Algorithm inspired by evolution strategy
+// #define ESP
 // With elitism
-// #define MB_ELIT
+// #define ESP_ELIT

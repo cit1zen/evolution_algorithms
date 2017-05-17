@@ -1,3 +1,9 @@
+/*
+* Author: xorman00  <xorman00@stud.fit.vutbr.cz>
+* Description: Experiment specific params
+* This file won't used if experiments is created by script.
+*/
+
 #define CMR_COUNT 50
 #define PATTERN_FITNESS 
 #define CYCLES 16

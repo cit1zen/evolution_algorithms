@@ -1,6 +1,6 @@
 /*
 * Author: xorman00  <xorman00@stud.fit.vutbr.cz>
-* Description: TODO
+* Description: Cellular automaton - header
 */
 
 #ifndef CA_H

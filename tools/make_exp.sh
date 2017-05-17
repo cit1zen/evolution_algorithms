@@ -1,4 +1,5 @@
 #!/bin/sh
+# Compile experiments
 
 cd experiments
 

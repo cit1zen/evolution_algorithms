@@ -1,4 +1,5 @@
 #!/bin/bash
+# Prints out queue of my IT4I account
 
 for ident in `qstat -u xorman00 | grep xorman00 | awk -F ' ' '{ print $1 }'`
 do

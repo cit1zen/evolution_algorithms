@@ -1,16 +1,12 @@
 .PHONY: all
 all: bp
 
+# Create devel experiments
 .PHONY: exp
 exp:
 	./tools/create_exp.py --config sets/config_exp.cfg
 
-.PHONY: prod
-prod:
-	./tools/create_exp.py --config sets/config_prod.cfg
-	./tools/create_exp.py --config sets/config_patterns.cfg
-	./tools/create_exp.py --config sets/config_letters.cfg
-
+# Create experiments used in my thesis
 .PHONY: bp
 bp:
 	./tools/create_exp.py --config sets/config_bp.cfg
@@ -23,23 +19,23 @@ delete:
 remove:
 	rm -r experiments/*
 
-.PHONY: clean
-clean:
-	./tools/clr_res.sh
-
+# Build and run experiments
 .PHONY: run
 run:
 	./tools/make_exp.sh
 	./tools/run_exp.sh
 
+# Stop all experiments
 .PHONY: stop
 stop:
 	./tools/stop_exp.sh
 
+# Resutls and statistics
 .PHONY: results
 result:
 	./tools/get_res.sh
 
+# Show status of my IT4I queue
 .PHONY: status
 status:
 	./tools/xorman.sh

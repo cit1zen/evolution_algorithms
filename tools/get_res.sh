@@ -1,4 +1,5 @@
 #!/bin/sh
+# Get results and statistics
 
 mkdir -p ./_results
 

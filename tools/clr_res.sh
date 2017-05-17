@@ -1,4 +1,5 @@
 #!/bin/sh
+# Remove results
 
 rm -r _results
 

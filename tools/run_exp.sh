@@ -1,4 +1,5 @@
 #!/bin/sh
+# Run all experiments
 
 cd experiments
 

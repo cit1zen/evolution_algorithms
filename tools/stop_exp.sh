@@ -1,4 +1,5 @@
 #!/bin/sh
+# Stop all experiments
 
 cd experiments
 
